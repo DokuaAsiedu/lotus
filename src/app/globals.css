@@ -3,4 +3,9 @@
 @theme {
   --color-light-gray: #D9D9D9;
   --color-brandeis-blue: #0D6EFD;
+  --color-eastern-blue: #17A2B8;
+}
+
+button {
+ @apply cursor-pointer;
 }
