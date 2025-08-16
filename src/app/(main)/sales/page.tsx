@@ -1,4 +1,4 @@
-import { Summary } from '@/components'
+import { Summary, Tickets } from '@/components'
 
 export default function Sales() {
   return (
@@ -6,6 +6,9 @@ export default function Sales() {
       <div className="col-span-11 lg:col-span-5 flex flex-col items-stretch flex-wrap gap-6">
         <div className="px-4 py-2 border-light-gray border-1 rounded-md">
           <Summary />
+        </div>
+        <div className="border-light-gray border-1 rounded-md">
+          <Tickets />
         </div>
       </div>
       <div className="col-span-11 lg:col-span-4 border-light-gray border-1 rounded-md"></div>
