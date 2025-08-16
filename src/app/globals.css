@@ -4,8 +4,13 @@
   --color-light-gray: #D9D9D9;
   --color-brandeis-blue: #0D6EFD;
   --color-eastern-blue: #17A2B8;
+  --color-smokey-gray: #737171;
 }
 
 button {
- @apply cursor-pointer;
+  @apply cursor-pointer;
+}
+
+input {
+  @apply py-2 px-4 focus:outline-0! border-light-gray border-1 rounded-sm;
 }
