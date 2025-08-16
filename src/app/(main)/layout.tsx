@@ -1,17 +1,27 @@
 import type { Metadata } from 'next'
 import '@/app/globals.css'
+import { Navbar } from '@/components'
+import { Michroma } from 'next/font/google'
 
 export const metadata: Metadata = {
   title: 'Lotus',
   description: 'Lottery app',
 }
 
+const michroma = Michroma({
+  weight: ["400"],
+  subsets: ['latin'],
+})
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${michroma.className} max-w-7xl min-h-screen mx-auto flex flex-col`}>
+        <header>
+          <Navbar />
+        </header>
         <main>
-          <div className="max-w-7xl min-h-screen mx-auto flex flex-col items-center justify-center">{children}</div>
+          <div className="flex flex-col items-center justify-center">{children}</div>
         </main>
       </body>
     </html>
