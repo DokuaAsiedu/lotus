@@ -21,7 +21,7 @@ export function MenuBar() {
         {gameEvents.map((item, index) => {
           return (
             <div key={`item-${index}`} className="flex gap-3">
-              <input name={item.name} type="checkbox" />
+              <input name={item.name} id={item.name} type="checkbox" />
               <label htmlFor={item.name}>{item.text}</label>
             </div>
           )

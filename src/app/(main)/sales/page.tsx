@@ -1,4 +1,4 @@
-import { Summary, Tickets } from '@/components'
+import { Retailers, Summary, Tickets } from '@/components'
 
 export default function Sales() {
   return (
@@ -11,7 +11,9 @@ export default function Sales() {
           <Tickets />
         </div>
       </div>
-      <div className="col-span-11 lg:col-span-4 border-light-gray border-1 rounded-md"></div>
+      <div className="col-span-11 lg:col-span-4 border-light-gray border-1 rounded-md">
+        <Retailers />
+      </div>
       <div className="col-span-11 lg:col-span-2 border-light-gray border-1 rounded-md"></div>
     </div>
   )
