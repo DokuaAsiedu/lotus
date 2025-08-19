@@ -21,7 +21,7 @@ export default function Login() {
               <div className="h-full flex items-center aspect-square">
                 <Image src="/icons/mail.png" alt="email icon" width={12} height={12} />
               </div>
-              <input id="email" name="email" className="border-0 focus:outline-0" placeholder="Enter your email"/>
+              <input id="email" name="email" className="border-0! focus:outline-0" placeholder="Enter your email"/>
             </div>
           </div>
           <div className="flex flex-col gap-1">
@@ -30,7 +30,7 @@ export default function Login() {
               <div className="h-full flex items-center aspect-square">
                 <Image src="/icons/lock.png" alt="email icon" width={12} height={12} />
               </div>
-              <input id="password" name="password" className="border-0 focus:outline-0" placeholder="Enter password" type="password" />
+              <input id="password" name="password" className="border-0! focus:outline-0" placeholder="Enter password" type="password" />
             </div>
           </div>
           <button type="submit" className="py-3 bg-black text-white cursor-pointer">Sign In</button>
