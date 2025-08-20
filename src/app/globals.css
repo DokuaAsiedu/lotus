@@ -22,7 +22,7 @@ button {
 }
 
 input {
-  @apply py-2 px-4 focus:outline-0! border-light-gray border-2 rounded-md;
+  @apply py-2 px-4 min-w-0 focus:outline-0! border-light-gray border-2 rounded-md;
 }
 
 hr {

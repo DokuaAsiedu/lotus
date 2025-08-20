@@ -19,7 +19,7 @@ const montserrat = Montserrat({
 
 export function MenuBar() {
   return (
-    <div className="flex items-center justify-between flex-wrap">
+    <div className="flex items-center justify-between flex-wrap gap-4">
       <div className={`${inter.className} flex items-center flex-wrap gap-4`}>
         <button type="button" className="self-stretch w-22">
           <Image
