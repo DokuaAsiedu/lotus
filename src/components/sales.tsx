@@ -91,7 +91,7 @@ export function Tickets() {
 export function Retailers() {
   return (
     <div className="flex flex-col justify-stretch">
-      <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between`}>
+      <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
           <span className={`${golosText.className} font-semibold`}>Retailers</span>
           <span className="text-smokey-gray font-bold">365</span>
@@ -108,7 +108,7 @@ export function Retailers() {
           </button>
         </div>
       </div>
-      <div className="px-8 py-4 flex flex-col items-end gap-1 bg-[#81DFF7] font-bold">
+      <div className="px-8 py-4 flex flex-col items-end gap-1 font-bold">
         <span className={`${montserrat.className} text-smokey-gray text-xs`}>Total Retailers Float</span>
         <span className={`${jura.className} text-lg`}>GHS 129,348.00</span>
       </div>
@@ -120,7 +120,7 @@ export function Retailers() {
         </div>
         {Array.from({ length: 10 }, (_, index) => {
           return (
-            <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm border-t-1 border-t-light-gray hover:bg-light-gray">
+            <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
               <div className="col-span-3 flex items-center gap-3">
                 <div className="grid place-items-center">
                   <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} />
