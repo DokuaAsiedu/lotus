@@ -63,7 +63,7 @@ export function Tickets() {
           <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 items-center text-sm border-t-1 border-t-light-gray">
             <div className="col-span-2 flex flex-col gap-2">
               <span>1024-1034589</span>
-              <span className={`text-smokey-gray text-2xs ${montserrat.className}`}>Mac 5 Original</span>
+              <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
             </div>
             <div className="col-span-1">Direct 5</div>
             <div className="col-span-3 flex items-center flex-wrap gap-2">
@@ -150,12 +150,12 @@ export function Winnings() {
             <h2 className="font-semibold text-xl">Winnings</h2>
             <p className="font-bold text-smokey-gray text-xs">Game</p>
           </div>
-          <div className={`${montserrat.className} text-smokey-gray`}>
+          <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
             <span className="text-xs font-bold">Draw Date</span>
-            <div className="p-2 flex gap-2 border-light-gray border-1 rounded-sm text-black">
+            <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
               <span>02/04/2025 |</span>
-              <div className="h-full aspect-square grid place-items-center">
-                <Image src="/icons/calendar.png" alt="calendaricon" height={5} width={5} layout="responsive" />
+              <div className="self-stretch aspect-square grid place-items-center">
+                <Image src="/icons/calendar.png" alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ export function Winnings() {
       <div className={`${montserrat.className} px-6 py-4 flex items-center gap-4 border-b-1 border-b-light-gray`}>
         <span className="font-bold">5/90 Original:</span>
         <div className="grow flex gap-2">
-          {[44, 33, 89, 21, 7].map((item, index) => {
+          {[44, 33, 89, 21, 17].map((item, index) => {
             return (
               <div key={`index-${index}`} className={`${inter.className} grow w-full grid place-items-center aspect-square bg-black text-white rounded-sm font-semibold`}>{item}</div>
             )
@@ -182,18 +182,18 @@ export function Winnings() {
           return (
             <div key={`index-${index}`} className="py-4 grid grid-cols-2 gap-2 border-b-1 border-b-[#E0E0E0]">
               <div className="flex flex-col gap-2">
-                <div className="col-span-1 flex gap-2">
-                  {[44, 33, 89, 21, 7].map((item, index) => {
+                <div className="col-span-1 flex items-stretch gap-2">
+                  {[44, 33, 89, 21, 17].map((item, index) => {
                     return (
-                      <div key={`elem-${index}`} className={`${inter.className} grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{item}</div>
+                      <div key={`elem-${index}`} className={`${inter.className} grow h-full px-px grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{item}</div>
                     )
                   })}
                 </div>
-                <p className={`${montserrat.className} text-xs text-smokey-gray`}>Perm 3 | 5/90 Original</p>
+                <p className={`${montserrat.className} text-2xs text-smokey-gray`}>Perm 3 | 5/90 Original</p>
               </div>
               <div className="col-span-1 flex flex-col items-end justify-between">
                 <span className={`${jura.className} text-end`}>GHS 3,012.00</span>
-                <span className={`${montserrat.className} text-smokey-gray text-xs`}>+233 (0)24 567 8901</span>
+                <span className={`${montserrat.className} text-smokey-gray text-2xs`}>+233 (0)24 567 8901</span>
               </div>
             </div>
           )
