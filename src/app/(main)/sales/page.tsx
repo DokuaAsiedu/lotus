@@ -2,7 +2,7 @@ import { Payout, Retailers, Summary, Tickets, Winnings } from '@/components'
 
 export default function Sales() {
   return (
-    <div className="p-4 w-full grid xl:grid-cols-12 gap-4">
+    <div className="w-full grid xl:grid-cols-12 gap-4">
       <div className="col-span-12 xl:col-span-5 flex flex-col items-stretch flex-wrap gap-6">
         <div className="px-4 py-2 border-light-gray border-1 rounded-md">
           <Summary />

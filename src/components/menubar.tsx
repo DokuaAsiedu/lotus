@@ -13,7 +13,7 @@ const jura = Jura({
 
 export function MenuBar() {
   return (
-    <div className="px-2 py-4 flex items-center justify-between flex-wrap border-b-1 border-b-light-gray">
+    <div className="flex items-center justify-between flex-wrap">
       <div className={`${inter.className} flex items-center flex-wrap gap-4`}>
         <button type="button" className="py-2 px-4 bg-eastern-blue text-white rounded-md">
           Games

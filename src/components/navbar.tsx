@@ -28,7 +28,7 @@ export function Navbar() {
   return (
     <div className={`${golosText.className}`}>
       {/* Mobile Menu */}
-      <div className="px-6 py-4 flex items-center justify-between lg:hidden">
+      <div className="flex items-center justify-between lg:hidden">
         <div>
           <Image src="/icon.png" alt="app icon" width={100} height={2} />
         </div>
@@ -95,7 +95,7 @@ export function Navbar() {
       </div>
 
       {/* Desktop menu */}
-      <div className="max-lg:hidden py-4 flex items-center justify-between border-b-1 border-b-light-gray">
+      <div className="max-lg:hidden flex items-center justify-between">
         <div>
           <Image src="/icon.png" alt="app icon" width={200} height={2} />
         </div>
@@ -115,21 +115,21 @@ export function Navbar() {
           <div className="flex items-stretch gap-2">
             <input
               type="search"
-              className={`${inter.className} px-4 py-2 focus:outline-0 border-2 border-light-gray rounded-md`}
+              className={`${inter.className} text-xs`}
               placeholder="Enter Search..."
             />
-            <button type="button" className="px-2 aspect-square border-2 border-light-gray rounded-md cursor-pointer">
+            <button type="button" className="aspect-square grid place-items-center px-2 border-2 border-light-gray rounded-md">
               <Image
                 src="/icons/magnifying-glass.png"
                 alt="magnifying glass"
                 width={10}
                 height={10}
-                className="aspect-square"
+                layout="responsive"
               />
             </button>
           </div>
-          <button type="button" className="p-2 cursor-pointer">
-            <Image src="/icons/gear.png" alt="gear icon" width={20} height={20} className="aspect-square" />
+          <button type="button" className="p-2">
+            <Image src="/icons/gear.png" alt="gear icon" width={20} height={20} layout="responsive" />
           </button>
           <button type="button" className="p-0.5 border-2 border-brandeis-blue rounded-full cursor-pointer">
             <Image src="/avatar.png" alt="gear icon" width={35} height={35} className="aspect-square" />

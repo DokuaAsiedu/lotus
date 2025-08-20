@@ -16,13 +16,19 @@ const michroma = Michroma({
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${michroma.className} w-full min-h-screen mx-auto flex flex-col`}>
+      <body className={`${michroma.className} max-w-9xl w-full min-h-screen mx-auto flex flex-col`}>
         <header>
-          <Navbar />
-          <MenuBar />
+          <div className="px-12 py-4">
+            <Navbar />
+          </div>
+          <hr />
+          <div className="px-12 py-4">
+            <MenuBar />
+          </div>
+          <hr />
         </header>
         <main>
-          <div className="flex flex-col items-center justify-center">{children}</div>
+          <div className="px-12 py-4 flex flex-col items-center justify-center">{children}</div>
         </main>
       </body>
     </html>
