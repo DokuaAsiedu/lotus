@@ -201,3 +201,13 @@ export function Winnings() {
     </div>
   )
 }
+
+export function Payout() {
+  return (
+    <div className={`${montserrat.className} px-6 py-4 flex flex-col gap-2 font-bold text-smokey-gray text-xs`}>
+      <h3>Payout Amount</h3>
+      <p className={`${jura.className} text-black text-2xl`}>GHS 13,012,348.00</p>
+      <span>to 13,084 players</span>
+    </div>
+  )
+}

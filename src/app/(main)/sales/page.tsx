@@ -1,4 +1,4 @@
-import { Retailers, Summary, Tickets, Winnings } from '@/components'
+import { Payout, Retailers, Summary, Tickets, Winnings } from '@/components'
 
 export default function Sales() {
   return (
@@ -14,8 +14,13 @@ export default function Sales() {
       <div className="col-span-12 xl:col-span-4 border-light-gray border-1 rounded-md">
         <Retailers />
       </div>
-      <div className="col-span-12 xl:col-span-3 border-light-gray border-1 rounded-md">
-        <Winnings />
+      <div className="col-span-12 xl:col-span-3 flex flex-col justify-between gap-5">
+        <div className="grow border-light-gray border-1 rounded-md">
+          <Winnings />
+        </div>
+        <div className="border-light-gray border-1 rounded-md">
+          <Payout />
+        </div>
       </div>
     </div>
   )
