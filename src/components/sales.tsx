@@ -98,7 +98,7 @@ export function Retailers() {
           <span className="text-smokey-gray font-bold">365</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
-          <input type="search" className="border-0!" placeholder="Enter phone number or name" />
+          <input type="search" className={`border-0! placeholder:Montserrat`} placeholder="Enter phone number or name" />
           <button type="button" className="px-2 aspect-square">
             <Image
               src="/icons/magnifying-glass.png"
@@ -111,7 +111,7 @@ export function Retailers() {
       </div>
       <div className="px-8 py-4 flex flex-col items-end gap-1 font-bold">
         <span className={`${montserrat.className} text-smokey-gray text-xs`}>Total Retailers Float</span>
-        <span className={`${jura.className} text-lg`}>GHS 129,348.00</span>
+        <span className={`${jura.className} text-2xl`}>GHS 129,348.00</span>
       </div>
       <div className="flex flex-col">
         <div className={`${inter.className} p-6 grid grid-cols-6 gap-4 font-bold text-sm bg-light-gray`}>
@@ -128,7 +128,7 @@ export function Retailers() {
                 </div>
                 <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                   <span>Sheena Osei</span>
-                  <span className="text-smokey-gray">+233 (0)24 567 8901</span>
+                  <span className={`text-smokey-gray`}>+233 (0)24 567 8901</span>
                 </div>
               </div>
               <div className={`${jura.className} col-span-2`}>GHS 3,012.00</div>
