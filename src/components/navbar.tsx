@@ -122,14 +122,13 @@ export function Navbar() {
               <Image
                 src="/icons/magnifying-glass.png"
                 alt="magnifying glass"
-                width={10}
-                height={10}
-                layout="responsive"
+                width={15}
+                height={15}
               />
             </button>
           </div>
           <button type="button" className="p-2">
-            <Image src="/icons/gear.png" alt="gear icon" width={20} height={20} layout="responsive" />
+            <Image src="/icons/gear.png" alt="gear icon" width={20} height={20} />
           </button>
           <button type="button" className="p-0.5 border-2 border-brandeis-blue rounded-full cursor-pointer">
             <Image src="/avatar.png" alt="gear icon" width={35} height={35} className="aspect-square" />
