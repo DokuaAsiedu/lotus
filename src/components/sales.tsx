@@ -1,6 +1,9 @@
+"use client"
+
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
+import { getFormattedDate } from "@/lib/helpers"
 
 const jura = Jura({
   weight: ['700'],
@@ -22,7 +25,37 @@ const golosText = Golos_Text({
   subsets: ['latin'],
 })
 
+interface SalesResponse {
+  total: string;
+  totalRetailClients: string;
+  totalStakes: string;
+}
+
 export function Summary() {
+  const [pending, setPending] = useState(true)
+  const [summary, setSummary] = useState<SalesResponse | null>(null);
+
+  const pendingClasses = "bg-zinc-200 text-transparent animate-pulse";
+
+  async function fetchData() {
+    const today = getFormattedDate(new Date())
+    setPending(true);
+    try {
+      const url = `/api/sales?gameId[]=1&startDate=${today}&endDate=${today}`
+      const response = await fetch(url);
+      const res = await response.json()
+      setSummary(res.data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <div className="flex items-center gap-4 text-smokey-gray">
       <div className="self-stretch aspect-square flex items-center justify-center">
@@ -30,8 +63,8 @@ export function Summary() {
       </div>
       <div className={`${montserrat.className} flex flex-col text-xs`}>
         <span className="font-bold text-smokey-gray">Today&apos;s total sales</span>
-        <span className={`${jura.className} font-bold text-base text-black`}>GHS 34,187,663.00</span>
-        <p>from <span className="font-bold">13,084 players</span> and <span className="font-bold">17,896 stakes</span></p>
+        <span className={`${jura.className} font-bold text-base text-black ${pending ? pendingClasses : ""}`}>{summary?.total ?? "0"}</span>
+        <p>from <span className={`font-bold  ${pending ? pendingClasses : ""}`}>{summary?.totalRetailClients ?? "0"} players</span> and <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalStakes ?? "0"} stakes</span></p>
       </div>
       <div className="flex items-center gap-2">
         <input type="search" placeholder="Search" className={`${inter.className} text-black text-sm placeholder:text-black placeholder:text-xs`} />

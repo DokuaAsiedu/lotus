@@ -55,3 +55,10 @@ export async function destroySession() {
 
   cookieStore.delete(SESSION_KEY)
 }
+
+export async function getToken() {
+  const session = await getCookie(SESSION_KEY);
+  const sessionParsed =  session ? JSON.parse(session) : null
+  const token = sessionParsed?.token || null
+  return token
+}
