@@ -1,6 +1,30 @@
+"use client"
+
+import { login } from "@/lib/apis";
+import { Spinner } from "@/components";
 import Image from "next/image";
+import { useState } from "react";
+import { errorAlert, successAlert } from "@/lib/alerts";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const [pending, setPending] = useState(false);
+  const router = useRouter()
+
+  async function handleSubmit(formData: FormData) {
+    setPending(true);
+    try {
+      await login(formData);
+      successAlert('Login successful')
+      router.push('/sales')
+    } catch (err) {
+      console.log(err)
+      errorAlert(err.message);
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <div className="flex flex-col items-center gap-4">
       <div>
@@ -14,7 +38,11 @@ export default function Login() {
           <p>Sign-in with google</p>
         </button>
         <p className="text-center">Or</p>
-        <form className="flex flex-col items-stretch gap-5">
+        <form className="flex flex-col items-stretch gap-5" onSubmit={async (e) => {
+          e.preventDefault()
+          const formData = new FormData(e.currentTarget)
+          await handleSubmit(formData)
+        }}>
           <div className="flex flex-col gap-1">
             <label htmlFor="email">Email</label>
             <div className="px-4 py-2 flex items-center gap-4 border-1 border-black">
@@ -33,7 +61,9 @@ export default function Login() {
               <input id="password" name="password" className="border-0! focus:outline-0" placeholder="Enter password" type="password" />
             </div>
           </div>
-          <button type="submit" className="py-3 bg-black text-white cursor-pointer">Sign In</button>
+          <button type="submit" className="py-3 flex items-center justify-center bg-black text-white cursor-pointer" disabled={pending}>
+            {pending ? <Spinner text="Signing in..." /> : "Sign In"}
+          </button>
         </form>
       </div>
     </div>
