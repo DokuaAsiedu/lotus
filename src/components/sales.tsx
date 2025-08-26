@@ -181,7 +181,7 @@ export function Retailers() {
     <div className="flex flex-col justify-stretch">
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
-          <span className={`${golosText.className} font-semibold`}>Retailers</span>
+          <span className={`${golosText.className} font-semibold text-xl`}>Retailers</span>
           <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailers ?? 0}</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
@@ -296,11 +296,11 @@ export function Winnings() {
       <div className={`${montserrat.className} px-6 py-4 flex items-center gap-4 border-b-1 border-b-light-gray`}>
         <span className="font-bold">5/90 Original:</span>
         <div className="grow flex gap-2">
-          {[44, 33, 89, 21, 17].map((item, index) => {
+          {eventResults[0] ? eventResults[0].winningStake.split(",").map((item, index) => {
             return (
               <div key={`index-${index}`} className={`${inter.className} grow w-full grid place-items-center aspect-square bg-black text-white rounded-sm font-semibold`}>{item}</div>
             )
-          })}
+          }) : "N/A"}
         </div>
       </div>
       <div className="px-6">
@@ -315,7 +315,7 @@ export function Winnings() {
                 <div className="col-span-1 grid grid-cols-5 gap-2">
                   {item.stake.split(",").map((elem, pos) => {
                     return (
-                      <div key={`elem-${pos}`} className={`${inter.className} h-full px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
+                      <div key={`elem-${pos}`} className={`${inter.className} w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
                     )
                   }) ?? <Placeholder />}
                 </div>
