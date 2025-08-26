@@ -17,9 +17,9 @@ export default function Login() {
       await login(formData);
       successAlert('Login successful')
       router.push('/sales')
-    } catch (err) {
+    } catch (err: unknown) {
       console.log(err)
-      errorAlert(err.message);
+      errorAlert("Login failed");
     } finally {
       setPending(false);
     }
