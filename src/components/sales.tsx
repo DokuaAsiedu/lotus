@@ -122,7 +122,7 @@ export function Tickets() {
         </div> : 
         tickets.map((item, index) => {
         return (
-          <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 items-center text-sm border-t-1 border-t-light-gray">
+          <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
             <div className="col-span-2 flex flex-col gap-2">
               <span>{item.ticketNumber ?? "N/A"}</span>
               <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>

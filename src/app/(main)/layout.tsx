@@ -9,7 +9,7 @@ const michroma = Michroma({
 
 export default function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className={`${michroma.className} max-w-9xl w-full min-h-screen mx-auto flex flex-col`}>
+    <div className={`${michroma.className} max-w-[12xl] w-full min-h-screen mx-auto flex flex-col`}>
       <header>
         <div className="px-12 py-4">
           <Navbar />
