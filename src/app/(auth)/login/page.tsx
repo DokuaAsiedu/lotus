@@ -14,7 +14,15 @@ export default function Login() {
   async function handleSubmit(formData: FormData) {
     setPending(true);
     try {
-      await login(formData);
+      const url = "/api/login";
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      })
+      const res = await response.json()
+      if (!res.success) {
+        throw new Error("Login failed")
+      }
       successAlert('Login successful')
       router.push('/sales')
     } catch (err: unknown) {
