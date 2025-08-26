@@ -3,7 +3,9 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { getFormattedDate } from "@/lib/helpers"
+import { formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
+import { RetailerSummary, SalesResponse } from "@/types"
+import { Placeholder, Spinner } from "./general"
 
 const jura = Jura({
   weight: ['700'],
@@ -25,17 +27,11 @@ const golosText = Golos_Text({
   subsets: ['latin'],
 })
 
-interface SalesResponse {
-  total: string;
-  totalRetailClients: string;
-  totalStakes: string;
-}
+const pendingClasses = "bg-zinc-200 text-transparent animate-pulse";
 
 export function Summary() {
   const [pending, setPending] = useState(true)
   const [summary, setSummary] = useState<SalesResponse | null>(null);
-
-  const pendingClasses = "bg-zinc-200 text-transparent animate-pulse";
 
   async function fetchData() {
     const today = getFormattedDate(new Date())
@@ -123,12 +119,33 @@ export function Tickets() {
 }
 
 export function Retailers() {
+  const [pending, setPending] = useState(true)
+  const [retailerSummary, setRetailerSummary] = useState<RetailerSummary | null>(null);
+
+  async function fetchData() {
+    setPending(true);
+    try {
+      const url = "/api/retailers"
+      const response = await fetch(url);
+      const res = await response.json()
+      setRetailerSummary(res.data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <div className="flex flex-col justify-stretch">
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
           <span className={`${golosText.className} font-semibold`}>Retailers</span>
-          <span className="text-smokey-gray font-bold">365</span>
+          <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailers ?? 0}</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
           <input type="search" className={`border-0! placeholder:Montserrat`} placeholder="Enter phone number or name" />
@@ -144,7 +161,7 @@ export function Retailers() {
       </div>
       <div className="px-8 py-4 flex flex-col items-end gap-1 font-bold">
         <span className={`${montserrat.className} text-smokey-gray text-xs`}>Total Retailers Float</span>
-        <span className={`${jura.className} text-2xl`}>GHS 129,348.00</span>
+        <span className={`${jura.className} text-2xl ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailerFloat ?? 0}</span>
       </div>
       <div className="flex flex-col">
         <div className={`${inter.className} p-6 grid grid-cols-6 gap-4 font-bold text-sm bg-light-gray`}>
@@ -152,23 +169,27 @@ export function Retailers() {
           <div className="col-span-2">Sales</div>
           <div className="col-span-1">Stake #</div>
         </div>
-        {Array.from({ length: 10 }, (_, index) => {
+        {pending ? 
+        <div className="p-6 flex flex-col items-center justify-center">
+          <Spinner />
+        </div> : 
+        retailerSummary?.retailers?.map((item, index) => {
           return (
             <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
               <div className="col-span-3 flex items-center gap-3">
                 <div className="grid place-items-center">
-                  <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} />
+                  <Image src={item.retailClient.profileImage ?? "/avatar-sheena.png"} alt="qr code" height={30} width={30} />
                 </div>
                 <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                  <span>Sheena Osei</span>
-                  <span className={`text-smokey-gray`}>+233 (0)24 567 8901</span>
+                  <span>{item.retailClient.name ?? "N/A"}</span>
+                  <span className={`text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
                 </div>
               </div>
-              <div className={`${jura.className} col-span-2`}>GHS 3,012.00</div>
-              <div className={`${inter.className} col-span-1`}>14</div>
+              <div className={`${jura.className} col-span-2`}>{item.sales}</div>
+              <div className={`${inter.className} col-span-1`}>{item.totalStakes}</div>
             </div>
           )
-        })}
+        }) ?? <Placeholder />}
       </div>
     </div>
   )
