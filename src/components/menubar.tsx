@@ -1,6 +1,9 @@
-import { gameEvents } from '@/lib'
+"use client"
+
 import { Inter, Jura, Montserrat } from 'next/font/google'
 import Image from 'next/image'
+import { useEffect, useState } from "react"
+import { Placeholder, Spinner } from "./general"
 
 const inter = Inter({
   weight: ['400'],
@@ -17,7 +20,34 @@ const montserrat = Montserrat({
   subsets: ['latin'],
 })
 
+interface GamesResponse {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export function MenuBar() {
+  const [pending, setPending] = useState(true)
+  const [games, setGames] = useState<GamesResponse[]>([]);
+
+  async function fetchData() {
+    setPending(true);
+    try {
+      const url = "/api/games"
+      const response = await fetch(url);
+      const res = await response.json()
+      setGames(res.data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <div className="flex items-center justify-between flex-wrap gap-4">
       <div className={`${inter.className} flex items-center flex-wrap gap-4`}>
@@ -30,14 +60,14 @@ export function MenuBar() {
             layout="responsive"
           />
         </button>
-        {gameEvents.map((item, index) => {
+        {pending ? <Spinner /> : games?.map((item, index) => {
           return (
             <div key={`item-${index}`} className="flex items-center gap-3">
-              <input name={item.name} id={item.name} type="checkbox" />
-              <label htmlFor={item.name}>{item.text}</label>
+              <input name="name" id={`item-${item.id}`} type="checkbox" />
+              <label htmlFor={`item-${item.id}`}>{item.name}</label>
             </div>
           )
-        })}
+        }) ?? <Placeholder text="Games not available" />}
       </div>
       <div className={`flex items-center gap-4`}>
         <span className={`${montserrat.className} font-bold text-sm`}>Next Draw In</span>
