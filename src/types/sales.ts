@@ -27,3 +27,19 @@ export interface SalesResponse {
   totalRetailClients: string;
   totalStakes: string;
 }
+
+
+export interface Winner {
+  stake: string;
+  amount: string;
+  play: string;
+  retailClient: RetailClient;
+}
+
+export interface EventResult {
+  eventId: string;
+  winningStake: string;
+  payoutAmount: string;
+  totalPlayers: string;
+  winners: Winner[];
+}

@@ -1,10 +1,10 @@
 "use client"
 
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
-import { RetailerSummary, SalesResponse } from "@/types"
+import { formatDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
+import { EventResult, RetailerSummary, SalesResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 
 const jura = Jura({
@@ -196,10 +196,44 @@ export function Retailers() {
 }
 
 export function Winnings() {
+  const [pending, setPending] = useState(true)
+  const [eventResults, setEventResults] = useState<EventResult[]>([]);
+  const [drawDate, setDrawDate] = useState(getFormattedDate(new Date(), {monthFirst: true, separator: "/"}))
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  async function fetchData() {
+    setPending(true);
+    try {
+      const url = `/api/winnings?gameId=1&startDate=${drawDate}&endDate=${drawDate}`
+      const response = await fetch(url);
+      const res = await response.json()
+      setEventResults(res.data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function handleDrawDate() {
+    if (dateInputRef.current) {
+      dateInputRef.current.showPicker();
+    }
+  }
+
+  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const date = formatDateString(e.currentTarget.value)
+    setDrawDate(date)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [drawDate])
+
   return (
     <div>
       <div className="px-6 py-4 flex flex-col gap-2 border-b-1 border-b-light-gray">
-        <div className="grid grid-cols-2">
+        <div className="flex justify-between">
           <div className={`${golosText.className} flex flex-col justify-between gap-4`}>
             <h2 className="font-semibold text-xl">Winnings</h2>
             <p className="font-bold text-smokey-gray text-xs">Game</p>
@@ -207,17 +241,18 @@ export function Winnings() {
           <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
             <span className="text-xs font-bold">Draw Date</span>
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
-              <span>02/04/2025 |</span>
-              <div className="self-stretch aspect-square grid place-items-center">
+              <span>{drawDate ?? "N/A"} |</span>
+              <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
                 <Image src="/icons/calendar.png" alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
-              </div>
+                <input type="date" ref={dateInputRef} onChange={handleDateChange} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
+              </button>
             </div>
           </div>
         </div>
         <div className={`${montserrat.className} flex items-center justify-between`}>
           <span className="font-normal">5/90 Original +</span>
           <p className="text-xs font-bold text-end text-smokey-gray">
-            Event #: <span className="text-black">91023</span>
+            Event #: <span className={`text-black ${pending ? pendingClasses : ""}`}>{eventResults[0]?.eventId ?? "N/A"}</span>
           </p>
         </div>
       </div>
@@ -232,26 +267,33 @@ export function Winnings() {
         </div>
       </div>
       <div className="px-6">
-        {Array.from({ length: 10 }, (_, index) => {
+        {pending ? 
+          <div className="p-6 flex flex-col items-center justify-center">
+            <Spinner/>
+          </div> : 
+          eventResults[0]?.winners.map((item, index) => {
           return (
             <div key={`index-${index}`} className="py-4 grid grid-cols-2 gap-2 border-b-1 border-b-[#E0E0E0]">
               <div className="flex flex-col gap-2">
-                <div className="col-span-1 flex items-stretch gap-2">
-                  {[44, 33, 89, 21, 17].map((item, index) => {
+                <div className="col-span-1 grid grid-cols-5 gap-2">
+                  {item.stake.split(",").map((elem, pos) => {
                     return (
-                      <div key={`elem-${index}`} className={`${inter.className} grow h-full px-px grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{item}</div>
+                      <div key={`elem-${pos}`} className={`${inter.className} h-full px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
                     )
-                  })}
+                  }) ?? <Placeholder />}
                 </div>
-                <p className={`${montserrat.className} text-2xs text-smokey-gray`}>Perm 3 | 5/90 Original</p>
+                <p className={`${montserrat.className} text-2xs text-smokey-gray`}>{item.play ?? "N/A"} | 5/90 Original</p>
               </div>
               <div className="col-span-1 flex flex-col items-end justify-between">
-                <span className={`${jura.className} text-end`}>GHS 3,012.00</span>
-                <span className={`${montserrat.className} text-smokey-gray text-2xs`}>+233 (0)24 567 8901</span>
+                <span className={`${jura.className} text-end`}>{item.amount ?? 0}</span>
+                <span className={`${montserrat.className} text-smokey-gray text-2xs`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
               </div>
             </div>
           )
-        })}
+        }) ?? 
+        <div className="p-6 flex flex-col items-center justify-center">
+          <Placeholder text="Winnings not available"/>
+        </div>}
       </div>
     </div>
   )
