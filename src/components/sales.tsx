@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
 import { formatDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
-import { EventResult, RetailerSummary, SalesResponse } from "@/types"
+import { EventResult, RetailerSummary, SalesResponse, Stake, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 
 const jura = Jura({
@@ -79,6 +79,35 @@ export function Summary() {
 }
 
 export function Tickets() {
+  const [pending, setPending] = useState(true)
+  const [tickets, setTickets] = useState<Stake[]>([]);
+
+  async function fetchData() {
+    setPending(true);
+    try {
+      const url = "/api/stakes?gameId=1"
+      const response = await fetch(url);
+      const res = await response.json()
+
+      const arr: Stake[] = [];
+
+      res.data.forEach((item: TicketResponse, index: number) => {
+        item.Stakes.forEach((elem: Stake) => {
+          arr.push(elem)
+        })
+      })
+      setTickets(arr)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <div className={`${inter.className} flex flex-col`}>
       <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
@@ -87,18 +116,22 @@ export function Tickets() {
         <div className="col-span-3">Stakes</div>
         <div className="col-span-3">Retailers</div>
       </div>
-      {Array.from({ length: 10 }, (_, index) => {
+      {pending ? 
+        <div className="p-6 flex justify-center">
+          <Spinner />
+        </div> : 
+        tickets.map((item, index) => {
         return (
           <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 items-center text-sm border-t-1 border-t-light-gray">
             <div className="col-span-2 flex flex-col gap-2">
-              <span>1024-1034589</span>
+              <span>{item.ticketNumber ?? "N/A"}</span>
               <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
             </div>
-            <div className="col-span-1">Direct 5</div>
-            <div className="col-span-3 flex items-center flex-wrap gap-2">
-              {[44, 33, 89, 21, 17].map((item, index) => {
+            <div className="col-span-1">{item.play}</div>
+            <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
+              {item.stake.split(",").map((elem, pos) => {
                 return (
-                  <div key={`index-${index}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{item}</div>
+                  <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
                 )
               })}
             </div>
@@ -107,13 +140,17 @@ export function Tickets() {
                 <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
               </div>
               <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                <span>Sheena Osei</span>
-                <span className="text-smokey-gray">+233 (0)24 567 8901</span>
+                <span>{}</span>
+                <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
               </div>
             </div>
           </div>
         )
-      })}
+      }) ?? 
+      <div className="p-6 flex justify-center">
+        <Placeholder text="Stakes not available" />
+      </div>
+      }
     </div>
   )
 }

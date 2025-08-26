@@ -43,3 +43,22 @@ export interface EventResult {
   totalPlayers: string;
   winners: Winner[];
 }
+
+interface Game {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+export interface Stake {
+  ticketNumber: string;
+  game: Game;
+  play: string;
+  stake: string;
+  retailClient: RetailClient;
+}
+
+export interface TicketResponse {
+  coupon: string;
+  Stakes: Stake[];
+}
