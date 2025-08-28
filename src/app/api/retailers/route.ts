@@ -1,23 +1,48 @@
 import { BASE_URL } from "@/config"
-import { getToken } from "@/lib/session"
+import { destroySession, getToken } from "@/lib/session"
 import { redirect } from "next/navigation"
 
 export async function GET() {
-  const token = await getToken()
+  try {
+    const token = await getToken()
 
-  if (!token) {
-    redirect("/login")
+    if (!token) {
+      destroySession()
+      redirect("/login")
+    }
+
+    const url = `${BASE_URL}/reports/sales/retailers`
+
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (response.status == 401) {
+      destroySession()
+      redirect("/login")
+    }
+
+    if (!response.ok) {
+      throw new Error("Error getting sales")
+    }
+
+    const res = await response.json()
+
+    if (res.status) {
+      throw new Error(res.message)
+    }
+
+    return Response.json(res)
+  } catch (err) {
+    const response = {
+      status: false,
+      message: "Error getting sales",
+      data: null,
+    }
+
+    return Response.json(response)
   }
-
-  const url = `${BASE_URL}/reports/sales/retailers`
-
-  const res = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  const data = await res.json()
-  return Response.json(data)
 }

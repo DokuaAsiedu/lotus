@@ -186,6 +186,12 @@ export function Retailers() {
     fetchData()
   }, [])
 
+  const placeholderRow = (children: React.ReactNode) => {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center text-lg">{children}</div>
+    )
+  }
+
   return (
     <div className="h-full flex flex-col justify-stretch">
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
@@ -217,9 +223,7 @@ export function Retailers() {
         </div>
         <div className="grow overflow-auto">
           {pending ? 
-            <div className="p-6 flex flex-col items-center justify-center">
-              <Spinner />
-            </div> : 
+            placeholderRow(<Spinner />) : 
             retailerSummary?.retailers?.map((item, index) => {
               return (
                 <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
@@ -237,9 +241,7 @@ export function Retailers() {
                 </div>
               )
             }) ?? 
-            <div className="p-6 flex flex-col items-center justify-center">
-              <Placeholder />
-            </div>
+            placeholderRow(<Placeholder text="Retailers not available" />)
           }
         </div>
       </div>
