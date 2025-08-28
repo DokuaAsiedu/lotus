@@ -4,6 +4,8 @@ import { Inter, Jura, Montserrat } from 'next/font/google'
 import Image from 'next/image'
 import { useEffect, useState } from "react"
 import { Placeholder, Spinner } from "./general"
+import { Game } from "@/types"
+import { useAppState } from "@/providers/state-provider"
 
 const inter = Inter({
   weight: ['400'],
@@ -20,15 +22,10 @@ const montserrat = Montserrat({
   subsets: ['latin'],
 })
 
-interface GamesResponse {
-  id: string;
-  name: string;
-  description: string | null;
-}
-
 export function MenuBar() {
   const [pending, setPending] = useState(true)
-  const [games, setGames] = useState<GamesResponse[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const {selectedGames, handleSelectedGames} = useAppState()
 
   async function fetchData() {
     setPending(true);
@@ -41,6 +38,16 @@ export function MenuBar() {
       console.log(err)
     } finally {
       setPending(false);
+    }
+  }
+
+  const handleGame = (gameId: Game["id"]) => {
+    const match = selectedGames.find((item: Game) => item.id == gameId)
+    if (match) {
+      handleSelectedGames(selectedGames.filter((item) => item.id == match.id))
+    } else {
+      const game = games.find((item) => item.id == gameId)
+      if (game) handleSelectedGames([...selectedGames, game])
     }
   }
 
@@ -63,7 +70,7 @@ export function MenuBar() {
         {pending ? <Spinner /> : games?.map((item, index) => {
           return (
             <div key={`item-${index}`} className="flex items-center gap-3">
-              <input name="name" id={`item-${item.id}`} type="checkbox" />
+              <input name="name" id={`item-${item.id}`} type="checkbox" onChange={() => handleGame(item.id)} />
               <label htmlFor={`item-${item.id}`}>{item.name}</label>
             </div>
           )

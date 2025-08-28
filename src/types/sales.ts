@@ -44,7 +44,7 @@ export interface EventResult {
   winners: Winner[];
 }
 
-interface Game {
+export interface Game {
   id: string;
   name: string;
   description: string | null;

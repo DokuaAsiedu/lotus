@@ -3,6 +3,7 @@ import { Michroma } from 'next/font/google'
 import React from 'react'
 import '@/app/globals.css'
 import { ToastrProvider } from "@/providers"
+import { AppStateProvider } from "@/providers/state-provider"
 
 export const metadata: Metadata = {
   title: 'Lotus',
@@ -18,8 +19,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${michroma.className} text-[0.8rem]`}>
-        {children}
-        <ToastrProvider />
+        <AppStateProvider>
+          {children}
+          <ToastrProvider />
+        </AppStateProvider>
       </body>
     </html>
   )
