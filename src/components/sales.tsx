@@ -91,6 +91,10 @@ export function Tickets() {
 
       const arr: Stake[] = [];
 
+      if (!res.data) {
+        res.data = []
+      }
+
       res.data.forEach((item: TicketResponse, index: number) => {
         item.Stakes.forEach((elem: Stake) => {
           arr.push(elem)
@@ -108,6 +112,12 @@ export function Tickets() {
     fetchData()
   }, [])
 
+  const placeholderRow = (children: React.ReactNode) => {
+    return (
+      <div className="p-6 flex justify-center text-lg">{children}</div>
+    )
+  }
+
   return (
     <div className={`h-full ${inter.className} flex flex-col`}>
       <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
@@ -118,39 +128,36 @@ export function Tickets() {
       </div>
       <div className="overflow-auto">
         {pending ? 
-          <div className="p-6 flex justify-center overflow-auto">
-            <Spinner />
-          </div> : 
-          tickets.map((item, index) => {
-            return (
-              <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
-                <div className="col-span-2 flex flex-col gap-2">
-                  <span>{item.ticketNumber ?? "N/A"}</span>
-                  <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
-                </div>
-                <div className="col-span-1">{item.play}</div>
-                <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
-                  {item.stake.split(",").map((elem, pos) => {
-                    return (
-                      <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
-                    )
-                  })}
-                </div>
-                <div className="col-span-3 flex items-center gap-3">
-                  <div className="grid place-items-center">
-                    <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
+          placeholderRow(<Spinner />) : 
+          tickets && tickets.length ? 
+            tickets.map((item, index) => {
+              return (
+                <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
+                  <div className="col-span-2 flex flex-col gap-2">
+                    <span>{item.ticketNumber ?? "N/A"}</span>
+                    <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
                   </div>
-                  <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                    <span>{}</span>
-                    <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                  <div className="col-span-1">{item.play}</div>
+                  <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
+                    {item.stake.split(",").map((elem, pos) => {
+                      return (
+                        <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
+                      )
+                    })}
+                  </div>
+                  <div className="col-span-3 flex items-center gap-3">
+                    <div className="grid place-items-center">
+                      <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
+                    </div>
+                    <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
+                      <span>{}</span>
+                      <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          }) ?? 
-          <div className="p-6 flex justify-center">
-            <Placeholder text="Stakes not available" />
-          </div>
+              )
+            }) : 
+          placeholderRow(<Placeholder text="Stakes not available" />)
         }
       </div>
     </div>
