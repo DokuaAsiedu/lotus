@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     const res = await response.json()
 
-    if (res.status) {
+    if (!res.status) {
       throw new Error(res.message)
     }
 

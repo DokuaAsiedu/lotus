@@ -31,7 +31,7 @@ export async function GET() {
 
     const res = await response.json()
 
-    if (res.status) {
+    if (!res.status) {
       throw new Error(res.message)
     }
 
