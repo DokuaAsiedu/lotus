@@ -60,7 +60,7 @@ export function Summary() {
       <div className={`${montserrat.className} flex flex-col text-xs`}>
         <span className="font-bold text-smokey-gray">Today&apos;s total sales</span>
         <span className={`${jura.className} font-bold text-base text-black ${pending ? pendingClasses : ""}`}>{summary?.total ?? "0"}</span>
-        <p>from <span className={`font-bold  ${pending ? pendingClasses : ""}`}>{summary?.totalRetailClients ?? "0"} players</span> and <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalStakes ?? "0"} stakes</span></p>
+        <p className="">from <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalRetailClients ?? "0"} players</span> and <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalStakes ?? "0"} stakes</span></p>
       </div>
       <div className="flex items-center gap-2">
         <input type="search" placeholder="Search" className={`${inter.className} text-black text-sm placeholder:text-black placeholder:text-xs`} />
@@ -109,48 +109,50 @@ export function Tickets() {
   }, [])
 
   return (
-    <div className={`${inter.className} flex flex-col`}>
+    <div className={`h-full ${inter.className} flex flex-col`}>
       <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
         <div className="col-span-2">Tickets #</div>
         <div className="col-span-1">Play</div>
         <div className="col-span-3">Stakes</div>
         <div className="col-span-3">Retailers</div>
       </div>
-      {pending ? 
-        <div className="p-6 flex justify-center">
-          <Spinner />
-        </div> : 
-        tickets.map((item, index) => {
-        return (
-          <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
-            <div className="col-span-2 flex flex-col gap-2">
-              <span>{item.ticketNumber ?? "N/A"}</span>
-              <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
-            </div>
-            <div className="col-span-1">{item.play}</div>
-            <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
-              {item.stake.split(",").map((elem, pos) => {
-                return (
-                  <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
-                )
-              })}
-            </div>
-            <div className="col-span-3 flex items-center gap-3">
-              <div className="grid place-items-center">
-                <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
+      <div className="overflow-auto">
+        {pending ? 
+          <div className="p-6 flex justify-center overflow-auto">
+            <Spinner />
+          </div> : 
+          tickets.map((item, index) => {
+            return (
+              <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
+                <div className="col-span-2 flex flex-col gap-2">
+                  <span>{item.ticketNumber ?? "N/A"}</span>
+                  <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
+                </div>
+                <div className="col-span-1">{item.play}</div>
+                <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
+                  {item.stake.split(",").map((elem, pos) => {
+                    return (
+                      <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
+                    )
+                  })}
+                </div>
+                <div className="col-span-3 flex items-center gap-3">
+                  <div className="grid place-items-center">
+                    <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
+                  </div>
+                  <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
+                    <span>{}</span>
+                    <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                  </div>
+                </div>
               </div>
-              <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                <span>{}</span>
-                <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
-              </div>
-            </div>
+            )
+          }) ?? 
+          <div className="p-6 flex justify-center">
+            <Placeholder text="Stakes not available" />
           </div>
-        )
-      }) ?? 
-      <div className="p-6 flex justify-center">
-        <Placeholder text="Stakes not available" />
+        }
       </div>
-      }
     </div>
   )
 }
@@ -178,7 +180,7 @@ export function Retailers() {
   }, [])
 
   return (
-    <div className="flex flex-col justify-stretch">
+    <div className="h-full flex flex-col justify-stretch">
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
           <span className={`${golosText.className} font-semibold text-xl`}>Retailers</span>
@@ -200,33 +202,39 @@ export function Retailers() {
         <span className={`${montserrat.className} text-smokey-gray text-xs`}>Total Retailers Float</span>
         <span className={`${jura.className} text-2xl ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailerFloat ?? 0}</span>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-hidden">
         <div className={`${inter.className} p-6 grid grid-cols-6 gap-4 font-bold text-sm bg-light-gray`}>
           <div className="col-span-3">Retailer</div>
           <div className="col-span-2">Sales</div>
           <div className="col-span-1">Stake #</div>
         </div>
-        {pending ? 
-        <div className="p-6 flex flex-col items-center justify-center">
-          <Spinner />
-        </div> : 
-        retailerSummary?.retailers?.map((item, index) => {
-          return (
-            <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
-              <div className="col-span-3 flex items-center gap-3">
-                <div className="grid place-items-center">
-                  <Image src={item.retailClient.profileImage ?? "/avatar-sheena.png"} alt="qr code" height={30} width={30} />
+        <div className="grow overflow-auto">
+          {pending ? 
+            <div className="p-6 flex flex-col items-center justify-center">
+              <Spinner />
+            </div> : 
+            retailerSummary?.retailers?.map((item, index) => {
+              return (
+                <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
+                  <div className="col-span-3 flex items-center gap-3">
+                    <div className="grid place-items-center">
+                      <Image src={item.retailClient.profileImage ?? "/avatar-sheena.png"} alt="qr code" height={30} width={30} />
+                    </div>
+                    <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
+                      <span>{item.retailClient.name ?? "N/A"}</span>
+                      <span className={`text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                    </div>
+                  </div>
+                  <div className={`${jura.className} col-span-2`}>{item.sales}</div>
+                  <div className={`${inter.className} col-span-1`}>{item.totalStakes}</div>
                 </div>
-                <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                  <span>{item.retailClient.name ?? "N/A"}</span>
-                  <span className={`text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
-                </div>
-              </div>
-              <div className={`${jura.className} col-span-2`}>{item.sales}</div>
-              <div className={`${inter.className} col-span-1`}>{item.totalStakes}</div>
+              )
+            }) ?? 
+            <div className="p-6 flex flex-col items-center justify-center">
+              <Placeholder />
             </div>
-          )
-        }) ?? <Placeholder />}
+          }
+        </div>
       </div>
     </div>
   )
@@ -268,7 +276,7 @@ export function Winnings() {
   }, [drawDate])
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="px-6 py-4 flex flex-col gap-2 border-b-1 border-b-light-gray">
         <div className="flex justify-between">
           <div className={`${golosText.className} flex flex-col justify-between gap-4`}>
@@ -303,7 +311,7 @@ export function Winnings() {
           }) : "N/A"}
         </div>
       </div>
-      <div className="px-6">
+      <div className="grow px-4 overflow-auto">
         {pending ? 
           <div className="p-6 flex flex-col items-center justify-center">
             <Spinner/>
@@ -327,10 +335,11 @@ export function Winnings() {
               </div>
             </div>
           )
-        }) ?? 
-        <div className="p-6 flex flex-col items-center justify-center">
-          <Placeholder text="Winnings not available"/>
-        </div>}
+          }) ?? 
+          <div className="p-6 flex flex-col items-center justify-center">
+            <Placeholder text="Winnings not available"/>
+          </div>
+        }
       </div>
     </div>
   )
