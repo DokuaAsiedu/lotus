@@ -5,6 +5,7 @@ import { createContext, useContext, useState } from "react";
 
 const state: State = {
   selectedGames: [],
+  handleSelectedGames: () => {},
 }
 
 const AppStateContext = createContext(state)
