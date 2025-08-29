@@ -45,7 +45,7 @@ export function MenuBar() {
   const handleGame = (gameId: Game["id"]) => {
     const match = selectedGames.find((item: Game) => item.id == gameId)
     if (match) {
-      handleSelectedGames(selectedGames.filter((item) => item.id == match.id))
+      handleSelectedGames(selectedGames.filter((item) => item.id != match.id))
     } else {
       const game = games.find((item) => item.id == gameId)
       if (game) handleSelectedGames([...selectedGames, game])
