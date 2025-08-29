@@ -167,7 +167,7 @@ export function Tickets() {
                 </div>
               )
             }) : 
-          placeholderRow(<Placeholder text="Stakes not available" />)
+          placeholderRow(<Placeholder text="No Stakes available for today" />)
         }
       </div>
     </div>
@@ -335,7 +335,7 @@ export function Winnings() {
           <div className="p-6 flex flex-col items-center justify-center">
             <Spinner/>
           </div> : 
-          eventResults ? eventResults[0]?.winners.map((item, index) => {
+          (eventResults && eventResults.length && eventResults[0].winners.length) ? eventResults[0]?.winners.map((item, index) => {
           return (
             <div key={`index-${index}`} className="py-4 grid grid-cols-2 gap-2 border-b-1 border-b-[#E0E0E0]">
               <div className="flex flex-col gap-2">
