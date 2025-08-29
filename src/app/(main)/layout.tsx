@@ -12,19 +12,19 @@ export default function MainLayout({ children }: Readonly<{ children: React.Reac
   return (
     <div className={`${michroma.className} w-full mx-auto flex flex-col`}>
       <header className="sticky top-0 bg-white z-50">
-        <div className="mx-auto max-w-9xl px-12 py-4">
+        <div className="mx-auto max-w-10xl px-12 py-4">
           <Navbar />
         </div>
         <hr />
         <MenuBarWrapper>
-          <div className="mx-auto max-w-9xl px-12 py-4">
+          <div className="mx-auto max-w-10xl px-12 py-4">
             <MenuBar />
           </div>
           <hr />
         </MenuBarWrapper>
       </header>
       <main className="h-[1000px]">
-        <div className="h-full min-w-[750px] max-w-9xl px-12 py-4 mx-auto flex flex-col items-center ">
+        <div className="h-full min-w-[750px] max-w-10xl px-12 py-4 mx-auto flex flex-col items-center ">
           {children}
         </div>
       </main>
