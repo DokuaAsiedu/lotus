@@ -77,10 +77,10 @@ export function MenuBar() {
           )
         }) ?? <Placeholder text="Games not available" />}
       </div>
-      <div className={`flex items-center gap-4`}>
+      {/* <div className={`flex items-center gap-4`}>
         <span className={`${montserrat.className} font-bold text-sm`}>Next Draw In</span>
         <span className={`${jura.className} font-bold text-2xl`}>00h : 45m : 34s</span>
-      </div>
+      </div> */}
     </div>
   )
 }
