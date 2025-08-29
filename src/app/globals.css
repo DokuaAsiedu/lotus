@@ -14,6 +14,7 @@
   --color-lagoon-blue: #81DFF7;
   --color-white-smoke: #F3F4F6;
   --color-pearl-bush: #E0E0E0;
+  --color-heavy-metal: #2C2C2C;
 
   --text-2xs: 0.6rem;
 }
@@ -36,4 +37,8 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked::before {
   @apply absolute inset-0 flex items-center justify-center content-["\2713"] text-black text-lg;
+}
+
+.placeholder {
+  @apply bg-zinc-200 text-transparent animate-pulse
 }

@@ -1,3 +1,7 @@
+"use client"
+
+import { usePathname } from "next/navigation"
+import React from "react"
 import { Jura } from "next/font/google";
 import { ImSpinner2 } from "react-icons/im";
 
@@ -21,6 +25,18 @@ export function Spinner({ text = "Loading...",  }: SpinnerProps) {
 
 export function Placeholder({text = "Not available"}: {text?: string}) {
   return (
-    <div className={`${jura.className} text-lg`}>{text}</div>
+    <div className={`text-lg`}>{text}</div>
   )
+}
+
+export default function MenuBarWrapper({ children }: Readonly<{ children: React.ReactNode }>) {
+  const path = usePathname()
+
+  if (path !== "/retailers") {
+    return (
+      <React.Fragment>
+        {children}
+      </React.Fragment>
+    )
+  }
 }

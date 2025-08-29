@@ -17,7 +17,7 @@ export const routes = [
   },
   {
     name: "Retailers",
-    path: "#"
+    path: "/retailers"
   },
   {
     name: "Players",
