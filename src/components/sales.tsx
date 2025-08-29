@@ -130,7 +130,7 @@ export function Tickets() {
   return (
     <div className={`h-full ${inter.className} flex flex-col`}>
       <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
-        <div className="col-span-2">Coupon #</div>
+        <div className="col-span-2">Tickent #</div>
         <div className="col-span-1">Play</div>
         <div className="col-span-3">Stakes</div>
         <div className="col-span-3">Retailers</div>
@@ -143,7 +143,7 @@ export function Tickets() {
               return (
                 <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
                   <div className="col-span-2 flex flex-col gap-2">
-                    <span>{item.coupon ?? "N/A"}</span>
+                    <span>{item.ticketNumber ?? "N/A"}</span>
                     <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
                   </div>
                   <div className="col-span-1">{item.play}</div>
