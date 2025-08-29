@@ -37,12 +37,14 @@ const pendingClasses = "bg-zinc-200 text-transparent animate-pulse";
 export function Summary() {
   const [pending, setPending] = useState(true)
   const [summary, setSummary] = useState<SalesResponse | null>(null);
+  const {selectedGames} = useAppState()
 
   async function fetchData() {
     const today = getFormattedDate(new Date())
     setPending(true);
     try {
-      const url = `/api/sales?gameId[]=1&startDate=${today}&endDate=${today}`
+      const gameIds = selectedGames.map((item) => `gameId[]=${item.id}`).join("&")
+      const url = `/api/sales?startDate=${today}&endDate=${today}&${gameIds}`
       const response = await fetch(url);
       const res = await response.json()
       setSummary(res.data)
@@ -55,7 +57,7 @@ export function Summary() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [selectedGames])
 
   return (
     <div className="flex items-center gap-4 text-smokey-gray">
