@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Golos_Text, Inter } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 import React, { useState } from 'react'
-import appIcon from "@public/icon.png"
+import appIcon from "@public/app-icon.png"
 import loggedInUserIcon from "@public/avatar.png"
 import burgerIcon from "@public/icons/burger-menu.png"
 import closeIcon from "@public/icons/close.png"

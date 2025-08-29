@@ -65,7 +65,6 @@ export function MenuBar() {
             alt="icon with text 'games'"
             width={100}
             height={10}
-            layout="responsive"
           />
         </button>
         {pending ? <Spinner /> : games?.map((item, index) => {
