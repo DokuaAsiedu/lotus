@@ -42,3 +42,31 @@ input[type="checkbox"]:checked::before {
 .placeholder {
   @apply bg-zinc-200 text-transparent animate-pulse
 }
+
+.base-font {
+  @apply text-xs;
+}
+
+.navbar-font {
+  @apply text-sm;
+}
+
+.header-font {
+  @apply text-sm;
+}
+
+.table-header-font {
+  @apply text-sm;
+}
+
+.main-number-font {
+  @apply text-2xl;
+}
+
+.sub-number-font {
+  @apply text-sm
+}
+
+.emphasis-font {
+  @apply text-2xl;
+}

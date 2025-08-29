@@ -109,7 +109,7 @@ export function Navbar() {
           {routes.map((item, index) => {
             return (
               <React.Fragment key={`item-${index}`}>
-                <Link href={item.path} className={`link ${pathname === item.path ? 'font-extrabold' : 'font-medium'}`}>
+                <Link href={item.path} className={`navbar-font link ${pathname === item.path ? 'font-extrabold' : 'font-medium'}`}>
                   {item.name}
                 </Link>
                 {index === 3 && <span>|</span>}
@@ -121,7 +121,7 @@ export function Navbar() {
           <div className="flex items-stretch gap-2">
             <input
               type="search"
-              className={`${inter.className} text-xs`}
+              className={`${inter.className}`}
               placeholder="Enter Search..."
             />
             <button type="button" className="aspect-square grid place-items-center px-2 border-2 border-light-gray rounded-md">

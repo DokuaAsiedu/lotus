@@ -61,13 +61,13 @@ export function Summary() {
       <div className="self-stretch aspect-square flex items-center justify-center">
         <Image src={qrCodeIcon} alt="qr code" height={100} width={100} className="w-24" />
       </div>
-      <div className={`${montserrat.className} flex flex-col text-xs`}>
+      <div className={`${montserrat.className} flex flex-col`}>
         <span className="font-bold text-smokey-gray">Today&apos;s total sales</span>
-        <span className={`${jura.className} font-bold text-base text-black ${pending ? pendingClasses : ""}`}>{summary?.total ?? "0"}</span>
+        <span className={`${jura.className} font-bold text-black main-number-font ${pending ? pendingClasses : ""}`}>{summary?.total ?? "0"}</span>
         <p className="">from <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalRetailClients ?? "0"} players</span> and <span className={`font-bold ${pending ? pendingClasses : ""}`}>{summary?.totalStakes ?? "0"} stakes</span></p>
       </div>
       <div className="flex items-center gap-2">
-        <input type="search" placeholder="Search" className={`${inter.className} text-black text-sm placeholder:text-black placeholder:text-xs`} />
+        <input type="search" placeholder="Search" className={`${inter.className} text-black placeholder:text-black`} />
         <button type="button" className="self-stretch aspect-square p-2 border-2 border-light-gray rounded-md cursor-pointer">
           <Image
             src={magnifyingGlassIcon}
@@ -124,13 +124,13 @@ export function Tickets() {
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
-      <div className={`p-6 flex justify-center text-lg ${inter.className}`}>{children}</div>
+      <div className={`p-6 flex justify-center ${inter.className}`}>{children}</div>
     )
   }
 
   return (
     <div className={`h-full ${inter.className} flex flex-col`}>
-      <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
+      <div className="p-6 grid grid-cols-9 gap-4 font-bold">
         <div className="col-span-2">Ticket #</div>
         <div className="col-span-1">Play</div>
         <div className="col-span-3">Stakes</div>
@@ -142,10 +142,10 @@ export function Tickets() {
           tickets && tickets.length ? 
             tickets.map((item, index) => {
               return (
-                <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 text-sm border-t-1 border-t-light-gray">
+                <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 border-t-1 border-t-light-gray">
                   <div className="col-span-2 flex flex-col gap-2">
                     <span>{item.ticketNumber ?? "N/A"}</span>
-                    <span className={`text-smokey-gray text-xs ${montserrat.className}`}>Mac 5 Original</span>
+                    <span className={`text-smokey-gray ${montserrat.className}`}>Mac 5 Original</span>
                   </div>
                   <div className="col-span-1">{item.play}</div>
                   <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
@@ -161,7 +161,7 @@ export function Tickets() {
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{item.retailClient.name || "N/A"}</span>
-                      <span className="text-smokey-gray text-sm">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                      <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
                     </div>
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export function Retailers() {
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
-      <div className={`p-6 flex flex-col items-center justify-center text-lg ${inter.className}`}>{children}</div>
+      <div className={`p-6 flex flex-col items-center justify-center ${inter.className}`}>{children}</div>
     )
   }
 
@@ -206,7 +206,7 @@ export function Retailers() {
     <div className="h-full flex flex-col justify-stretch">
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
-          <span className={`${golosText.className} font-semibold text-xl`}>Retailers</span>
+          <span className={`${golosText.className} font-semibold header-font`}>Retailers</span>
           <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailers ?? 0}</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
@@ -222,11 +222,11 @@ export function Retailers() {
         </div>
       </div>
       <div className="px-8 py-4 flex flex-col items-end gap-1 font-bold">
-        <span className={`${montserrat.className} text-smokey-gray text-xs`}>Total Retailers Float</span>
-        <span className={`${jura.className} text-2xl ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailerFloat ?? 0}</span>
+        <span className={`${montserrat.className} text-smokey-gray`}>Total Retailers Float</span>
+        <span className={`main-number-font ${jura.className} ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailerFloat ?? 0}</span>
       </div>
       <div className="flex flex-col overflow-hidden">
-        <div className={`${inter.className} p-6 grid grid-cols-6 gap-4 font-bold text-sm bg-light-gray`}>
+        <div className={`${inter.className} p-6 grid grid-cols-6 gap-4 font-bold bg-light-gray`}>
           <div className="col-span-3">Retailer</div>
           <div className="col-span-2">Sales</div>
           <div className="col-span-1">Stake #</div>
@@ -236,7 +236,7 @@ export function Retailers() {
             placeholderRow(<Spinner />) : 
             retailerSummary?.retailers?.map((item, index) => {
               return (
-                <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
+                <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center even:bg-white-smoke">
                   <div className="col-span-3 flex items-center gap-3">
                     <div className="grid place-items-center">
                       <Image src={item.retailClient.profileImage ?? profileAvatar} alt="qr code" height={30} width={30} />
@@ -299,11 +299,11 @@ export function Winnings() {
       <div className="px-6 py-4 flex flex-col gap-2 border-b-1 border-b-light-gray">
         <div className="flex justify-between">
           <div className={`${golosText.className} flex flex-col justify-between gap-4`}>
-            <h2 className="font-semibold text-xl">Winnings</h2>
-            <p className="font-bold text-smokey-gray text-xs">Game</p>
+            <h2 className="font-semibold header-font">Winnings</h2>
+            <p className="font-bold text-smokey-gray">Game</p>
           </div>
           <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
-            <span className="text-xs font-bold">Draw Date</span>
+            <span className=" font-bold">Draw Date</span>
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
               <span>{drawDate ?? "N/A"} |</span>
               <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
@@ -315,7 +315,7 @@ export function Winnings() {
         </div>
         <div className={`${montserrat.className} flex items-center justify-between`}>
           <span className="font-normal">5/90 Original +</span>
-          <p className="text-xs font-bold text-end text-smokey-gray">
+          <p className=" font-bold text-end text-smokey-gray">
             Event #: <span className={`text-black ${pending ? pendingClasses : ""}`}>{eventResults ? eventResults[0]?.eventId : "N/A"}</span>
           </p>
         </div>
@@ -346,11 +346,11 @@ export function Winnings() {
                     )
                   }) ?? <Placeholder />}
                 </div>
-                <p className={`${montserrat.className} text-2xs text-smokey-gray`}>{item.play ?? "N/A"} | 5/90 Original</p>
+                <p className={`${montserrat.className} text-smokey-gray`}>{item.play ?? "N/A"} | 5/90 Original</p>
               </div>
               <div className="col-span-1 flex flex-col items-end justify-between">
                 <span className={`${jura.className} text-end`}>{item.amount ?? 0}</span>
-                <span className={`${montserrat.className} text-smokey-gray text-2xs`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                <span className={`${montserrat.className} text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
               </div>
             </div>
           )
@@ -366,9 +366,9 @@ export function Winnings() {
 
 export function Payout() {
   return (
-    <div className={`${montserrat.className} px-6 py-4 flex flex-col gap-2 font-bold text-smokey-gray text-xs`}>
+    <div className={`${montserrat.className} px-6 py-4 flex flex-col gap-2 font-bold text-smokey-gray`}>
       <h3>Payout Amount</h3>
-      <p className={`${jura.className} text-black text-2xl`}>GHS 13,012,348.00</p>
+      <p className={`${jura.className} text-black`}>GHS 13,012,348.00</p>
       <span>to 13,084 players</span>
     </div>
   )

@@ -25,7 +25,7 @@ export function Spinner({ text = "Loading...",  }: SpinnerProps) {
 
 export function Placeholder({text = "Not available"}: {text?: string}) {
   return (
-    <div className={`text-lg`}>{text}</div>
+    <div>{text}</div>
   )
 }
 

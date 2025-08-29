@@ -71,7 +71,7 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
-      <div className="py-5 flex flex-col items-center gap-2 text-lg">{children}</div>
+      <div className="py-5 flex flex-col items-center gap-2">{children}</div>
     )
   }
 
@@ -84,8 +84,8 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
         </button>
       </div>
       <div className="px-4 flex flex-col items-end gap-1">
-        <h3 className="text-sm text-heavy-metal">No. of Retailers</h3>
-        <span className={`${jura.className} text-black text-2xl font-bold ${pending ? "placeholder" : ""}`}>{filteredRetailerSummary?.totalRetailers || 0}</span>
+        <h3 className="text-heavy-metal">No. of Retailers</h3>
+        <span className={`${jura.className} text-black font-bold main-number-font ${pending ? "placeholder" : ""}`}>{filteredRetailerSummary?.totalRetailers || 0}</span>
       </div>
       <div className="grow flex flex-col overflow-hidden">
         <div className="p-4 grid grid-cols-4 bg-pearl-bush font-bold">
@@ -137,20 +137,20 @@ export function RetailerCard({ activeRetailer }: { activeRetailer: Retailer | un
         </div>
         <div className="flex flex-col gap-3">
           <div className="flex items-end gap-2">
-            <h1 className="text-3xl font-bold">{activeRetailer.retailClient.name || "N/A"}</h1>
-            <span className={`text-xs ${golosText.className} text-heavy-metal`}>Active</span>
+            <h1 className="font-bold">{activeRetailer.retailClient.name || "N/A"}</h1>
+            <span className={`${golosText.className} text-heavy-metal`}>Active</span>
           </div>
           <div className="flex gap-20 font-bold">
             <div className="flex flex-col">
-              <h3 className="text-base">Players</h3>
+              <h3 className="">Players</h3>
               <span className={`${jura.className}`}>15</span>
             </div>
             <div className="flex flex-col">
-              <h3 className="text-base">Winners</h3>
+              <h3 className="">Winners</h3>
               <span className={`${jura.className}`}>83</span>
             </div>
             <div className="flex flex-col">
-              <h3 className="text-base">Sales</h3>
+              <h3 className="">Sales</h3>
               <span className={`${jura.className}`}>{activeRetailer.sales || "N/A"}</span>
             </div>
           </div>
@@ -201,9 +201,9 @@ export function RetailerTabs({ activeRetailer }: { activeRetailer: Retailer | un
 
   return (
     <div className={`h-full flex flex-col ${montserrat.className}`}>
-      <div className={`py-6 flex gap-8 border-b-1 border-b-pearl-bush ${golosText.className} text-base`}>
+      <div className={`py-6 flex gap-8 border-b-1 border-b-pearl-bush ${golosText.className}`}>
         {tabs.map((item) => (
-          <button type="button" key={`item-${item.id}`} className={`${item.id == activeTab.id ? "font-extrabold" : "font-medium"}`} onClick={() => handleTab(item.id)}>{item.name}</button>
+          <button type="button" key={`item-${item.id}`} className={`header-font ${item.id == activeTab.id ? "font-extrabold" : "font-medium"}`} onClick={() => handleTab(item.id)}>{item.name}</button>
         ))}
       </div>
       <activeTab.content activeRetailer={activeRetailer} />
@@ -249,7 +249,7 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
-      <tr className="text-lg">
+      <tr>
         <td colSpan={7} className="py-6">
           <div className="flex justify-center">
             {children}
@@ -338,7 +338,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
 
   const placeholderCont = (children: React.ReactNode) => {
     return (
-      <div className="h-full w-full p-6 flex justify-center text-lg">{children}</div>
+      <div className="h-full w-full p-6 flex justify-center">{children}</div>
     )
   }
 
@@ -369,8 +369,8 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
             }
             return (
               <button key={`item-${index}`} type="button" className={`px-16 py-4 flex flex-col justify-center gap-2 rounded-lg ${activeWallet?.walletId == item.walletId ? "bg-pearl-bush" : " border-3 border-pearl-bush"} shadow-pearl-bush shadow-[0_4px_4px_0px] font-bold`} onClick={() => handleActiveWallet(item.walletId)}>
-                <span className="text-2xs text-smokey-gray">Wallet {item.walletId || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
-                <h4 className={`text-2xl ${jura.className}`}>{item.balance || "N/A"}</h4>
+                <span className="text-smokey-gray">Wallet {item.walletId || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
+                <h4 className={`${jura.className}`}>{item.balance || "N/A"}</h4>
               </button>
             )
           })
@@ -378,7 +378,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
       </div>
       <div className="grow overflow-auto">
         <table className="w-full">
-          <thead className="sticky top-0 bg-white z-0 text-black text-sm font-bold">
+          <thead className="sticky top-0 bg-white z-0 text-black font-bold">
             <tr className="border-b-1 border-b-pearl-bush">
               <td className="px-2 py-4">Date</td>
               <td className="px-2 py-4">Description</td>

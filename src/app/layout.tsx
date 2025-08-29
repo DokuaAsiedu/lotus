@@ -18,7 +18,7 @@ const michroma = Michroma({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${michroma.className} text-[0.8rem]`}>
+      <body className={`${michroma.className} text-xs`}>
         <AppStateProvider>
           {children}
           <ToastrProvider />
