@@ -13,8 +13,10 @@ export async function GET(req: NextRequest) {
     }
 
     const gameId = req.nextUrl.searchParams.get("gameId")
+    const startDate = req.nextUrl.searchParams.get("startDate")
+    const endDate = req.nextUrl.searchParams.get("gameId")
 
-    const url = `${BASE_URL}/stakes?gameId[]=${gameId}`
+    const url = `${BASE_URL}/stakes?gameId[]=${gameId}&from=${startDate}&to=${endDate}`
 
     const response = await fetch(url, {
       headers: {

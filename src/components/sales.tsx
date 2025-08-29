@@ -91,7 +91,8 @@ export function Tickets() {
   async function fetchData() {
     setPending(true);
     try {
-      const url = "/api/stakes?gameId=1"
+      const date = getFormattedDate(new Date(), {monthFirst: true})
+      const url = `/api/stakes?gameId=1&startDate=${date}&endDate=${date}`
       const response = await fetch(url);
       const res = await response.json()
 
