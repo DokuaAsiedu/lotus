@@ -12,11 +12,11 @@ export async function GET(req: NextRequest) {
       redirect("/login")
     }
 
-    const gameId = req.nextUrl.searchParams.get("gameId")
+    const gameIds = req.nextUrl.searchParams.getAll("gameId[]").map((item) => `gameId[]=${item}`).join("&")
     const startDate = req.nextUrl.searchParams.get("startDate")
-    const endDate = req.nextUrl.searchParams.get("gameId")
+    const endDate = req.nextUrl.searchParams.get("endDate")
 
-    const url = `${BASE_URL}/stakes?gameId[]=${gameId}&from=${startDate}&to=${endDate}`
+    const url = `${BASE_URL}/stakes?from=${startDate}&to=${endDate}&${gameIds}`
 
     const response = await fetch(url, {
       headers: {

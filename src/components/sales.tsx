@@ -10,6 +10,7 @@ import profileAvatar from "@public/avatar-sheena.png"
 import calendarIcon from "@public/icons/calendar.png"
 import magnifyingGlassIcon from "@public/icons/magnifying-glass.png"
 import qrCodeIcon from "@public/icons/qr-code.png"
+import { useAppState } from "@/providers/state-provider"
 
 const jura = Jura({
   weight: ['700'],
@@ -87,12 +88,14 @@ type StakeWithCoupon = Stake & { coupon: string }
 export function Tickets() {
   const [pending, setPending] = useState(true)
   const [tickets, setTickets] = useState<StakeWithCoupon[]>([]);
+  const {selectedGames} = useAppState()
 
   async function fetchData() {
     setPending(true);
     try {
+      const gameIds = selectedGames.map((item) => `gameId[]=${item.id}`).join("&")
       const date = getFormattedDate(new Date(), {monthFirst: true})
-      const url = `/api/stakes?gameId=1&startDate=${date}&endDate=${date}`
+      const url = `/api/stakes?startDate=${date}&endDate=${date}&${gameIds}`
       const response = await fetch(url);
       const res = await response.json()
 
@@ -120,7 +123,7 @@ export function Tickets() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [selectedGames])
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
