@@ -6,6 +6,12 @@ import Link from 'next/link'
 import { Golos_Text, Inter } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 import React, { useState } from 'react'
+import appIcon from "@public/icon.png"
+import loggedInUserIcon from "@public/avatar.png"
+import burgerIcon from "@public/icons/burger-menu.png"
+import closeIcon from "@public/icons/close.png"
+import gearIcon from "@public/icons/gear.png"
+import magnifyingGlassIcon from "@public/icons/magnifying-glass.png"
 
 const golosText = Golos_Text({
   weight: ['400', '500', '800'],
@@ -30,10 +36,10 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div className="flex items-center justify-between lg:hidden">
         <div>
-          <Image src="/icon.png" alt="app icon" width={100} height={2} />
+          <Image src={appIcon} alt="app icon" width={100} height={2} />
         </div>
         <button className="p-2 cursor-pointer" onClick={() => handleSideMenu(true)}>
-          <Image src="/icons/burger-menu.png" alt="burger menu icon" width={20} height={20} />
+          <Image src={burgerIcon} alt="burger menu icon" width={20} height={20} />
         </button>
         {showSideMenu && (
           <div className="h-full w-full fixed top-0 right-0">
@@ -43,7 +49,7 @@ export function Navbar() {
                 className="self-end p-2 flex items-center justify-center cursor-pointer"
                 onClick={() => handleSideMenu(false)}
               >
-                <Image src="/icons/close.png" alt="close icon" width={20} height={20} />
+                <Image src={closeIcon} alt="close icon" width={20} height={20} />
               </button>
               {/* <div className="flex flex-col gap-4">
                 <button
@@ -97,7 +103,7 @@ export function Navbar() {
       {/* Desktop menu */}
       <div className="max-lg:hidden flex items-center justify-between">
         <div>
-          <Image src="/icon.png" alt="app icon" width={200} height={2} />
+          <Image src={appIcon} alt="app icon" width={200} height={2} />
         </div>
         <nav className="flex items-center gap-6">
           {routes.map((item, index) => {
@@ -120,7 +126,7 @@ export function Navbar() {
             />
             <button type="button" className="aspect-square grid place-items-center px-2 border-2 border-light-gray rounded-md">
               <Image
-                src="/icons/magnifying-glass.png"
+                src={magnifyingGlassIcon}
                 alt="magnifying glass"
                 width={15}
                 height={15}
@@ -128,10 +134,10 @@ export function Navbar() {
             </button>
           </div>
           <button type="button" className="p-2">
-            <Image src="/icons/gear.png" alt="gear icon" width={20} height={20} />
+            <Image src={gearIcon} alt="gear icon" width={20} height={20} />
           </button>
           <button type="button" className="p-0.5 border-2 border-brandeis-blue rounded-full cursor-pointer">
-            <Image src="/avatar.png" alt="gear icon" width={35} height={35} className="aspect-square" />
+            <Image src={loggedInUserIcon} alt="logged in user icon" width={35} height={35} className="aspect-square" />
           </button>
         </div>
       </div>

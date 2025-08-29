@@ -6,6 +6,10 @@ import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
 import { formatDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
 import { EventResult, RetailerSummary, SalesResponse, Stake, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
+import profileAvatar from "@public/avatar-sheena.png"
+import calendarIcon from "@public/icons/calendar.png"
+import magnifyingGlassIcon from "@public/icons/magnifying-glass.png"
+import qrCodeIcon from "@public/icons/qr-code.png"
 
 const jura = Jura({
   weight: ['700'],
@@ -55,7 +59,7 @@ export function Summary() {
   return (
     <div className="flex items-center gap-4 text-smokey-gray">
       <div className="self-stretch aspect-square flex items-center justify-center">
-        <Image src="/icons/qr-code.png" alt="qr code" height={100} width={100} className="w-24" />
+        <Image src={qrCodeIcon} alt="qr code" height={100} width={100} className="w-24" />
       </div>
       <div className={`${montserrat.className} flex flex-col text-xs`}>
         <span className="font-bold text-smokey-gray">Today&apos;s total sales</span>
@@ -66,7 +70,7 @@ export function Summary() {
         <input type="search" placeholder="Search" className={`${inter.className} text-black text-sm placeholder:text-black placeholder:text-xs`} />
         <button type="button" className="self-stretch aspect-square p-2 border-2 border-light-gray rounded-md cursor-pointer">
           <Image
-            src="/icons/magnifying-glass.png"
+            src={magnifyingGlassIcon}
             alt="magnifying glass"
             width={20}
             height={20}
@@ -147,7 +151,7 @@ export function Tickets() {
                   </div>
                   <div className="col-span-3 flex items-center gap-3">
                     <div className="grid place-items-center">
-                      <Image src="/avatar-sheena.png" alt="qr code" height={30} width={30} className="h-full aspect-square"/>
+                      <Image src={profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square"/>
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{}</span>
@@ -203,7 +207,7 @@ export function Retailers() {
           <input type="search" className={`border-0! placeholder:Montserrat`} placeholder="Enter phone number or name" />
           <button type="button" className="px-2 aspect-square">
             <Image
-              src="/icons/magnifying-glass.png"
+              src={magnifyingGlassIcon}
               alt="magnifying glass"
               width={20}
               height={20}
@@ -229,7 +233,7 @@ export function Retailers() {
                 <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center text-sm even:bg-white-smoke">
                   <div className="col-span-3 flex items-center gap-3">
                     <div className="grid place-items-center">
-                      <Image src={item.retailClient.profileImage ?? "/avatar-sheena.png"} alt="qr code" height={30} width={30} />
+                      <Image src={item.retailClient.profileImage ?? profileAvatar} alt="qr code" height={30} width={30} />
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{item.retailClient.name ?? "N/A"}</span>
@@ -297,7 +301,7 @@ export function Winnings() {
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
               <span>{drawDate ?? "N/A"} |</span>
               <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
-                <Image src="/icons/calendar.png" alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
+                <Image src={calendarIcon} alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
                 <input type="date" ref={dateInputRef} onChange={handleDateChange} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
               </button>
             </div>

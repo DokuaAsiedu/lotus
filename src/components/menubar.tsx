@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { Placeholder, Spinner } from "./general"
 import { Game } from "@/types"
 import { useAppState } from "@/providers/state-provider"
+import gamesIcon from "@public/icons/games.png"
 
 const inter = Inter({
   weight: ['400'],
@@ -60,7 +61,7 @@ export function MenuBar() {
       <div className={`${inter.className} flex items-center flex-wrap gap-4`}>
         <button type="button" className="self-stretch w-22">
           <Image
-            src="/icons/games.png"
+            src={gamesIcon}
             alt="icon with text 'games'"
             width={100}
             height={10}
