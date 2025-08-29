@@ -130,7 +130,7 @@ export function Tickets() {
   return (
     <div className={`h-full ${inter.className} flex flex-col`}>
       <div className="p-6 grid grid-cols-9 gap-4 font-bold text-sm">
-        <div className="col-span-2">Tickent #</div>
+        <div className="col-span-2">Ticket #</div>
         <div className="col-span-1">Play</div>
         <div className="col-span-3">Stakes</div>
         <div className="col-span-3">Retailers</div>
