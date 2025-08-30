@@ -16,7 +16,7 @@
   --color-pearl-bush: #E0E0E0;
   --color-heavy-metal: #2C2C2C;
 
-  --text-2xs: 0.6rem;
+  --text-2xs: 10px;
 }
 
 button {
@@ -56,7 +56,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .table-header-font {
-  @apply text-sm;
+  @apply text-xs;
 }
 
 .main-number-font {
@@ -69,4 +69,8 @@ input[type="checkbox"]:checked::before {
 
 .emphasis-font {
   @apply text-2xl;
+}
+
+.sub-text-font {
+  @apply text-2xs
 }

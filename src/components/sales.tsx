@@ -150,7 +150,7 @@ export function Tickets() {
                 <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 border-t-1 border-t-light-gray">
                   <div className="col-span-2 flex flex-col gap-2">
                     <span>{item.ticketNumber ?? "N/A"}</span>
-                    <span className={`text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
+                    <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
                   </div>
                   <div className="col-span-1">{item.play}</div>
                   <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
@@ -166,7 +166,7 @@ export function Tickets() {
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{item.retailClient.name || "N/A"}</span>
-                      <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                      <span className="sub-text-font text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
                     </div>
                   </div>
                 </div>
@@ -249,11 +249,11 @@ export function Retailers() {
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{item.retailClient.name ?? "N/A"}</span>
-                      <span className={`text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                      <span className={`sub-text-font text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
                     </div>
                   </div>
-                  <div className={`${jura.className} col-span-2`}>{item.sales}</div>
-                  <div className={`${inter.className} col-span-1`}>{item.totalStakes}</div>
+                  <div className={`${jura.className} col-span-2 sub-number-font`}>{item.sales}</div>
+                  <div className={`${inter.className} col-span-1 me-4 text-end`}>{item.totalStakes}</div>
                 </div>
               )
             }) ?? 
@@ -352,11 +352,11 @@ export function Winnings() {
                     )
                   }) ?? <Placeholder />}
                 </div>
-                <p className={`${montserrat.className} text-smokey-gray`}>{item.play ?? "N/A"} | 5/90 Original</p>
+                <p className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.play ?? "N/A"} | 5/90 Original</p>
               </div>
               <div className="col-span-1 flex flex-col items-end justify-between">
-                <span className={`${jura.className} text-end`}>{item.amount ?? 0}</span>
-                <span className={`${montserrat.className} text-smokey-gray`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                <span className={`${jura.className} text-end sub-number-font`}>{item.amount ?? 0}</span>
+                <span className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
               </div>
             </div>
           )
