@@ -186,7 +186,7 @@ export function Retailers() {
   async function fetchData() {
     setPending(true);
     try {
-      const url = "/api/retailers"
+      const url = "/api/reports/sales/retailers"
       const response = await fetch(url);
       const res = await response.json()
       setRetailerSummary(res.data)
