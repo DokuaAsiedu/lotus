@@ -1,11 +1,11 @@
 "use client"
 
 import { RetailerCard, RetailersPane, RetailerTabs } from "@/components";
-import { Retailer } from "@/types";
+import { Entity } from "@/types";
 import { useState } from "react";
 
 export default function Retailers() {
-  const [activeRetailer, setActiveRetailer] = useState<Retailer | undefined>(undefined)
+  const [activeRetailer, setActiveRetailer] = useState<Entity | undefined>(undefined)
 
   return (
     <div className="h-full w-full grid grid-cols-4 grid-rows-[100%] gap-2">
