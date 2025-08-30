@@ -186,7 +186,8 @@ export function Retailers() {
   async function fetchData() {
     setPending(true);
     try {
-      const url = "/api/reports/sales/retailers"
+      const date = getFormattedDate(new Date(), {monthFirst: true})
+      const url = `/api/reports/sales/retailers?from=${date}&to=${date}`
       const response = await fetch(url);
       const res = await response.json()
       setRetailerSummary(res.data)
