@@ -137,7 +137,7 @@ export function RetailerCard({ activeRetailer }: { activeRetailer: Retailer | un
         </div>
         <div className="flex flex-col gap-3">
           <div className="flex items-end gap-2">
-            <h1 className="font-bold">{activeRetailer.retailClient.name || "N/A"}</h1>
+            <h1 className="font-bold emphasis-font">{activeRetailer.retailClient.name || "N/A"}</h1>
             <span className={`${golosText.className} text-heavy-metal`}>Active</span>
           </div>
           <div className="flex gap-20 font-bold">
