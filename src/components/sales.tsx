@@ -150,7 +150,7 @@ export function Tickets() {
                 <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 border-t-1 border-t-light-gray">
                   <div className="col-span-2 flex flex-col gap-2">
                     <span>{item.ticketNumber ?? "N/A"}</span>
-                    <span className={`text-smokey-gray ${montserrat.className}`}>Mac 5 Original</span>
+                    <span className={`text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
                   </div>
                   <div className="col-span-1">{item.play}</div>
                   <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
