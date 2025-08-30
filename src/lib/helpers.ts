@@ -31,3 +31,10 @@ export function formatDateString(date: string) {
 
   return formatted
 }
+
+export function formatMonthFirstDateString(date: string) {
+  const [month, day, year] = date.split("/")
+  const formatted = `${day}/${month}/${year}`
+
+  return formatted
+}

@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { formatDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
+import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
 import { EventResult, RetailerSummary, SalesResponse, Stake, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 import profileAvatar from "@public/avatar-sheena.png"
@@ -324,7 +324,7 @@ export function Winnings() {
           <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
             <span className=" font-bold">Draw Date</span>
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
-              <span>{drawDate ? drawDate.split("-").join("/") : "N/A"} |</span>
+              <span>{drawDate ? formatMonthFirstDateString(drawDate) : "N/A"} |</span>
               <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
                 <Image src={calendarIcon} alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
                 <input type="date" ref={dateInputRef} onChange={handleDateChange} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
