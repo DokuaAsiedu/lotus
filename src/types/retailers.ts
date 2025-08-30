@@ -1,14 +1,14 @@
 import React from "react"
-import { Retailer } from "./sales"
+import { Entity, Retailer } from "./sales"
 
 export type RetailerPaneChildProps = {
-  handleActiveRetailer: (retailer: Retailer) => void
+  handleActiveRetailer: (retailer: Entity) => void
 }
 
 export type RetailerTab = {
   id: string
   name: string
-  content: ({activeRetailer}: {activeRetailer: Retailer | undefined}) => React.JSX.Element
+  content: ({activeRetailer}: {activeRetailer: Entity | undefined}) => React.JSX.Element
 }
 
 export interface WalletTransaction {
@@ -20,9 +20,24 @@ export interface WalletTransaction {
 }
 
 export interface Wallet {
-  entityId: number;
+  entityId?: number;
   walletId: number;
-  walletAccountNumber: string;
-  balance: string;
-  history: WalletTransaction[];
+  walletName: string;
+  walletTypeId?: number,
+  walletAccountNumber?: string;
+  balance?: string;
+  walletBalance?: string;
+  history?: WalletTransaction[];
+}
+
+export type Stats = {
+  players: number,
+  winners: number,
+  sales: string
+}
+
+export interface EntityStats {
+  id: number;
+  entityTypeId: number;
+  stats: Stats;
 }

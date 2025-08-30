@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Montserrat, Jura, Golos_Text } from "next/font/google";
 import { useEffect, useState } from "react";
-import { Retailer, RetailerPaneChildProps, RetailerSummary, RetailerTab, Stake, TicketResponse, Wallet } from "@/types";
+import { Entity, EntityStats, Game, RetailerPaneChildProps, RetailerTab, Stake, TicketResponse, Wallet } from "@/types";
 import { Placeholder, Spinner } from "./general";
 import { formatPhoneNumber, getFormattedDate } from "@/lib/helpers";
 import callIcon from "../../public/icons/call.png"
@@ -27,37 +27,38 @@ const golosText = Golos_Text({
 
 export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) {
   const [pending, setPending] = useState(true)
-  const [retailerSummary, setRetailerSummary] = useState<RetailerSummary | null>(null);
+  const [retailers, setRetailers] = useState<Entity[] | null>(null);
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredRetailerSummary, setFilteredRetailerSummary] = useState<RetailerSummary | null>(null)
+  const [filteredRetailers, setFilteredRetailers] = useState<Entity[] | null>(null)
 
   function selectRetailer(id: string) {
-    const match = retailerSummary?.retailers.find((item) => item.retailClient.id == id)
+    const match = retailers?.find((item) => item.id == id)
     if (match) handleActiveRetailer(match)
   }
 
-  function handleSearch() {
-    if (!searchTerm) {
-      setFilteredRetailerSummary(retailerSummary)
-    } else if (retailerSummary) {
-      const retailers = retailerSummary.retailers.filter((item) => item?.retailClient?.id.includes(searchTerm) || item.retailClient.contact.phone && item.retailClient.contact.phone.includes(searchTerm) || item?.retailClient?.name.includes(searchTerm))
-      const totalRetailers = retailers.length.toString()
-      setFilteredRetailerSummary({
-        ...retailerSummary,
-        totalRetailers,
-        retailers,
-      })
+  function handleSearch(value: string) {
+    setSearchTerm(value)
+    if (!value) {
+      setFilteredRetailers(retailers)
+    } else if (retailers) {
+      const entities = retailers.filter((item) => item?.id?.toLowerCase().toLowerCase().includes(value.toLowerCase()) || item?.contact?.phone?.toLowerCase().includes(value.toLowerCase()) || item?.profile?.name?.toLowerCase().includes(value.toLowerCase()))
+      setFilteredRetailers(entities)
     }
+  }
+
+  function triggerSearch() {
+    handleSearch(searchTerm)
   }
 
   async function fetchData() {
     setPending(true);
     try {
-      const url = "/api/reports/sales/retailers"
+      const entityId = 1
+      const url = `/api/entities?entityTypeId[]=${entityId}`
       const response = await fetch(url);
       const res = await response.json()
-      setRetailerSummary(res.data)
-      setFilteredRetailerSummary(res.data)
+      setRetailers(res.data)
+      setFilteredRetailers(res.data)
     } catch (err) {
       console.log(err)
     } finally {
@@ -78,33 +79,33 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
   return (
     <div className={`h-full flex flex-col gap-4 ${montserrat.className} text-black`}>
       <div className="flex gap-2 px-4 pt-6">
-        <input type="search" className="grow p-3! placeholder:text-black border-pearl-bush! border-1!" value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} placeholder="Enter id, phone number or name" />
-        <button type="button" className="h-full aspect-square grid place-items-center p-2 border-1 border-pearl-bush rounded-md" onClick={handleSearch}>
+        <input type="search" className="grow p-3! placeholder:text-black border-pearl-bush! border-1!" value={searchTerm} onChange={(e) => handleSearch(e.currentTarget.value)} placeholder="Enter id, phone number or name" />
+        <button type="button" className="h-full aspect-square grid place-items-center p-2 border-1 border-pearl-bush rounded-md" onClick={triggerSearch}>
           <Image src={magnifyingGlassIcon} alt="Magnifying glass" width={15} height={15} />
         </button>
       </div>
       <div className="px-4 flex flex-col items-end gap-1">
         <h3 className="text-heavy-metal">No. of Retailers</h3>
-        <span className={`${jura.className} text-black font-bold main-number-font ${pending ? "placeholder" : ""}`}>{filteredRetailerSummary?.totalRetailers || 0}</span>
+        <span className={`${jura.className} text-black font-bold main-number-font ${pending ? "placeholder" : ""}`}>{filteredRetailers?.length || 0}</span>
       </div>
       <div className="grow flex flex-col overflow-hidden">
-        <div className="p-4 grid grid-cols-4 bg-pearl-bush font-bold">
+        <div className="p-4 grid grid-cols-4 bg-pearl-bush table-header-font">
           <span className="col-span-1">ID #</span>
           <span className="col-span-3">NAME</span>
         </div>
         <div className="grow overflow-auto px-5">
           {pending ?
             placeholderRow(<Spinner />) :
-            filteredRetailerSummary?.retailers.map((item, index) => (
-              <button type="button" key={`item-${index}`} className="w-full py-5 grid grid-cols-4 gap-2 border-b-1 border-b-pearl-bush" onClick={() => selectRetailer(item.retailClient.id)} >
-                <div className="place-content-center justify-self-start col-span-1">{item.retailClient.id || "N/A"}</div>
+            filteredRetailers?.map((item, index) => (
+              <button type="button" key={`item-${index}`} className="w-full py-5 grid grid-cols-4 gap-2 border-b-1 border-b-pearl-bush" onClick={() => selectRetailer(item.id)} >
+                <div className="place-content-center justify-self-start col-span-1">{item.id || "N/A"}</div>
                 <div className="col-span-3 grid grid-cols-5 gap-4">
                   <div className="grid place-items-center">
-                    <Image src={item.retailClient.profileImage || profileAvatar} alt="retailer profile picture" width={15} height={15} className="w-full" />
+                    <Image src={item?.profile?.profileImage || profileAvatar} alt="retailer profile picture" width={15} height={15} className="w-full" />
                   </div>
                   <div className="col-span-3 flex flex-col items-start">
-                    <span>{item.retailClient.name || "N/A"}</span>
-                    <span className="text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                    <span>{item?.profile?.name || "N/A"}</span>
+                    <span className="text-smokey-gray sub-text-font">{item.contact.phone ? formatPhoneNumber(item.contact.phone) : "N/A"}</span>
                   </div>
                   <div className="grid place-items-center">
                     <div className="w-4 aspect-square bg-blue-500 rounded-full"></div>
@@ -120,7 +121,29 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
   )
 }
 
-export function RetailerCard({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
+export function RetailerCard({ activeRetailer }: { activeRetailer: Entity | undefined }) {
+  const [pending, setPending] = useState(false)
+  const [retailerStats, setRetailerStats] = useState<EntityStats[] | null>(null)
+
+  async function fetchData() {
+    setPending(true);
+    try {
+      const entityId = activeRetailer?.id
+      const url = `/api/entities/stats?entityId=${entityId}`
+      const response = await fetch(url);
+      const res = await response.json()
+      setRetailerStats(res.data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setPending(false);
+    }
+  }
+
+  useEffect(() => {
+    if (activeRetailer) fetchData()
+  }, [activeRetailer])
+
   if (!activeRetailer) {
     return (
       <div className={`w-full h-full flex items-center justify-center ${montserrat.className}`}>
@@ -137,31 +160,31 @@ export function RetailerCard({ activeRetailer }: { activeRetailer: Retailer | un
         </div>
         <div className="flex flex-col gap-3">
           <div className="flex items-end gap-2">
-            <h1 className="font-bold emphasis-font">{activeRetailer.retailClient.name || "N/A"}</h1>
+            <h1 className="font-bold emphasis-font">{activeRetailer?.profile?.name || "N/A"}</h1>
             <span className={`${golosText.className} text-heavy-metal`}>Active</span>
           </div>
           <div className="flex gap-20 font-bold">
             <div className="flex flex-col">
               <h3 className="">Players</h3>
-              <span className={`${jura.className}`}>15</span>
+              <span className={`${jura.className} ${pending ? "placeholder" : ""}`}>{(retailerStats && retailerStats.length) ? retailerStats[0].stats?.players : "N/A"}</span>
             </div>
             <div className="flex flex-col">
               <h3 className="">Winners</h3>
-              <span className={`${jura.className}`}>83</span>
+              <span className={`${jura.className} ${pending ? "placeholder" : ""}`}>{(retailerStats && retailerStats.length) ? retailerStats[0].stats?.winners : "N/A"}</span>
             </div>
             <div className="flex flex-col">
               <h3 className="">Sales</h3>
-              <span className={`${jura.className}`}>{activeRetailer.sales || "N/A"}</span>
+              <span className={`${jura.className} ${pending ? "placeholder" : ""}`}>{(retailerStats && retailerStats.length) ? retailerStats[0].stats?.sales : "N/A"}</span>
             </div>
           </div>
         </div>
       </div>
       <div>
-        <a href={`"tel:${activeRetailer.retailClient.contact.phone || "N/A"}`} className="p-4 flex items-center gap-2 border-1 border-light-gray rounded-lg font-bold">
+        <a href={`"tel:${activeRetailer?.contact?.phone || "N/A"}`} className="p-4 flex items-center gap-2 border-1 border-light-gray rounded-lg font-bold">
           <div>
             <Image src={callIcon} alt="Call icon" width={18} height={18} />
           </div>
-          <span>{activeRetailer?.retailClient?.contact?.phone ? formatPhoneNumber(activeRetailer.retailClient.contact.phone) : "N/A"}</span>
+          <span>{activeRetailer.contact.phone ? formatPhoneNumber(activeRetailer.contact.phone) : "N/A"}</span>
         </a>
       </div>
     </div>
@@ -191,8 +214,8 @@ const tabs: RetailerTab[] = [
   },
 ]
 
-export function RetailerTabs({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
-  const [activeTab, setActiveTab] = useState<RetailerTab>(tabs[2])
+export function RetailerTabs({ activeRetailer }: { activeRetailer: Entity | undefined }) {
+  const [activeTab, setActiveTab] = useState<RetailerTab>(tabs[1])
 
   const handleTab = (id: string) => {
     const match = tabs.find((item) => item.id == id)
@@ -211,14 +234,16 @@ export function RetailerTabs({ activeRetailer }: { activeRetailer: Retailer | un
   )
 }
 
-function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
+function SalesTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   const [pending, setPending] = useState(false)
   const [tickets, setTickets] = useState<Stake[]>([])
+  const [games, setGames] = useState<Game[]>([])
 
   async function fetchData() {
-    setPending(true);
     try {
-      const url = "/api/stakes?gameId=1"
+      const gameIds = games.map((item) => `gameId[]=${item.id}`).join("&")
+      const url = `/api/stakes?entityId=${activeRetailer?.id}&${gameIds}`
+      console.log(url)
       const response = await fetch(url);
       const res = await response.json()
 
@@ -229,7 +254,7 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
       }
 
       res.data.forEach((item: TicketResponse, index: number) => {
-        item.Stakes.filter((item) => item?.retailClient?.id == activeRetailer?.retailClient?.id).forEach((elem: Stake) => {
+        item.Stakes.filter((item) => item?.retailClient?.id == activeRetailer?.id).forEach((elem: Stake) => {
           arr.push(elem)
         })
       })
@@ -241,11 +266,29 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
     }
   }
 
-  useEffect(() => {
-    if (activeRetailer) {
-      fetchData()
+  async function fetchGames() {
+    setPending(true)
+    try {
+      const url = "/api/games"
+      const response = await fetch(url);
+      const res = await response.json()
+      if (!res.data || !res.data.length) {
+        res.data = []
+      }
+
+      setGames(res.data)
+    } catch (err) {
+      console.log(err)
     }
+  }
+
+  useEffect(() => {
+    if (activeRetailer) fetchGames()
   }, [activeRetailer])
+
+  useEffect(() => {
+    if (activeRetailer) fetchData()
+  }, [games])
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
@@ -274,13 +317,10 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
           </tr>
         </thead>
         <tbody>
-          {(!pending && !activeRetailer) && placeholderRow(<Placeholder text="Select a retailer to view their tickets" />)}
+          {(!activeRetailer && !pending) && placeholderRow(<Placeholder text="Select a retailer to view their tickets" />)}
           {pending ?
             placeholderRow(<Spinner />) :
-            tickets.map((item, index, arr) => {
-              if (!arr.length) {
-                return placeholderRow(<Placeholder text="Tickets not available" />)
-              }
+            (tickets && tickets.length) ? tickets.map((item, index) => {
               return (
                 <tr key={`item-${index}`} className="px-2 border-b-1 border-b-pearl-bush">
                   <td className="py-4 px-2">{item.ticketNumber || "N/A"}</td>
@@ -292,7 +332,7 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
                   <td className="py-4 px-2">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</td>
                 </tr>
               )
-            })
+            }) : (activeRetailer && !tickets.length) && placeholderRow(<Placeholder text="Tickets not available" />)
           }
         </tbody>
       </table>
@@ -300,7 +340,7 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Retailer | undefi
   )
 }
 
-function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
+function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   const [pending, setPending] = useState(false)
   const [wallets, setWallets] = useState<Wallet[]>([])
   const [activeWallet, setActiveWallet] = useState<Wallet | null>(null)
@@ -314,7 +354,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
     setPending(true);
     try {
       const date = getFormattedDate(new Date(), { monthFirst: true })
-      const url = `/api/wallets?entityId=${activeRetailer?.retailClient.id}&startDate=${date}&endDate=${date}`
+      const url = `/api/wallets?entityId=${activeRetailer?.id}&startDate=${date}&endDate=${date}`
       const response = await fetch(url);
       const res = await response.json()
 
@@ -323,6 +363,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
       }
 
       setWallets(res.data)
+      setActiveWallet(null)
     } catch (err) {
       console.log(err)
     } finally {
@@ -369,7 +410,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
             }
             return (
               <button key={`item-${index}`} type="button" className={`px-16 py-4 flex flex-col justify-center gap-2 rounded-lg ${activeWallet?.walletId == item.walletId ? "bg-pearl-bush" : " border-3 border-pearl-bush"} shadow-pearl-bush shadow-[0_4px_4px_0px] font-bold`} onClick={() => handleActiveWallet(item.walletId)}>
-                <span className="text-smokey-gray">Wallet {item.walletId || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
+                <span className="text-smokey-gray">{item?.walletName || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
                 <h4 className={`${jura.className} main-number-font`}>{item.balance || "N/A"}</h4>
               </button>
             )
@@ -410,10 +451,10 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
   )
 }
 
-function InsightTabContent({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
+function InsightTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   return <div></div>
 }
 
-function NotificationTabContent({ activeRetailer }: { activeRetailer: Retailer | undefined }) {
+function NotificationTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   return <div></div>
 }

@@ -1,3 +1,5 @@
+import { Wallet } from "./retailers"
+
 export interface RetailClientContact {
   email: string | null
   phone: string | null
@@ -63,4 +65,33 @@ export interface Stake {
 export interface TicketResponse {
   coupon: string;
   Stakes: Stake[];
+}
+
+export type Contact = {
+  email?: null | string,
+  phone?: string,
+}
+
+export type Profile = {
+  entityTypeName?: string,
+  channelName?: string,
+  name?: string,
+  profileImage?: null | string,
+}
+
+export type IdDocs = {
+  GhanaCardNumber: null | string,
+  GhanaCardFront: null | string,
+  GhanaCardBack: null | string,
+}
+
+export interface Entity {
+  "id": string;
+  "entityTypeId": number;
+  "channelId": number;
+  "profile": Profile;
+  "idDocs": IdDocs;
+  "contact": Contact,
+  "wallet": Wallet[];
+  "createdAt": string;
 }

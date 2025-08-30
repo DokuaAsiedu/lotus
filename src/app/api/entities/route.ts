@@ -51,8 +51,6 @@ export async function GET(req: NextRequest) {
       redirect("/login")
     }
 
-    console.log({token})
-
     return Response.json(res)
   } catch (err) {
     const response = {

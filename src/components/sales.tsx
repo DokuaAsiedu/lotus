@@ -97,7 +97,7 @@ export function Tickets() {
     try {
       const gameIds = selectedGames.map((item) => `gameId[]=${item.id}`).join("&")
       const date = getFormattedDate(new Date(), { monthFirst: true })
-      const url = `/api/stakes?startDate=${date}&endDate=${date}&${gameIds}`
+      const url = `/api/stakes?from=${date}&to=${date}&${gameIds}`
       const response = await fetch(url);
       const res = await response.json()
 
@@ -124,7 +124,7 @@ export function Tickets() {
   }
 
   useEffect(() => {
-    fetchData()
+    if (selectedGames.length) fetchData()
   }, [selectedGames])
 
   const placeholderRow = (children: React.ReactNode) => {
@@ -333,7 +333,7 @@ export function Winnings() {
           </div>
         </div>
         <div className={`${montserrat.className} flex items-center justify-between`}>
-          <span className="font-normal">5/90 Original +</span>
+          <span className="font-normal header-font">5/90 Original +</span>
           <p className=" font-bold text-end text-smokey-gray sub-text-font">
             Event #: <span className={`text-black ${pending ? pendingClasses : ""}`}>{eventResults ? eventResults[0]?.eventId : "N/A"}</span>
           </p>

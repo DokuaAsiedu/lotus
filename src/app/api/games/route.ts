@@ -1,8 +1,9 @@
 import { BASE_URL } from "@/config"
 import { destroySession, getToken } from "@/lib/session"
 import { redirect } from "next/navigation"
+import { NextRequest } from "next/server"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const token = await getToken()
 
@@ -11,7 +12,18 @@ export async function GET() {
       redirect("/login")
     }
 
-    const url = `${BASE_URL}/games`
+    let url = `${BASE_URL}/games`
+
+    const searchParamsArray = <string[]>[]
+
+    req.nextUrl.searchParams.forEach((value, key) => {
+      searchParamsArray.push(`${key}=${value}`)
+    })
+    const searchParams = searchParamsArray.join("&")
+
+    if (searchParams) {
+      url += "?" + searchParams
+    }
 
     const response = await fetch(url, {
       headers: {
