@@ -370,7 +370,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Retailer | undef
             return (
               <button key={`item-${index}`} type="button" className={`px-16 py-4 flex flex-col justify-center gap-2 rounded-lg ${activeWallet?.walletId == item.walletId ? "bg-pearl-bush" : " border-3 border-pearl-bush"} shadow-pearl-bush shadow-[0_4px_4px_0px] font-bold`} onClick={() => handleActiveWallet(item.walletId)}>
                 <span className="text-smokey-gray">Wallet {item.walletId || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
-                <h4 className={`${jura.className}`}>{item.balance || "N/A"}</h4>
+                <h4 className={`${jura.className} main-number-font`}>{item.balance || "N/A"}</h4>
               </button>
             )
           })
