@@ -319,10 +319,10 @@ export function Winnings() {
         <div className="flex justify-between">
           <div className={`${golosText.className} flex flex-col justify-between gap-4`}>
             <h2 className="font-semibold header-font">Winnings</h2>
-            <p className="font-bold text-smokey-gray">Game</p>
+            <p className="font-bold text-smokey-gray sub-text-font">Game</p>
           </div>
-          <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
-            <span className=" font-bold">Draw Date</span>
+          <div className={`${montserrat.className} flex flex-col gap-2 text-smokey-gray`}>
+            <span className="sub-text-font font-bold">Draw Date</span>
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
               <span>{drawDate ? formatMonthFirstDateString(drawDate) : "N/A"} |</span>
               <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
@@ -334,7 +334,7 @@ export function Winnings() {
         </div>
         <div className={`${montserrat.className} flex items-center justify-between`}>
           <span className="font-normal">5/90 Original +</span>
-          <p className=" font-bold text-end text-smokey-gray">
+          <p className=" font-bold text-end text-smokey-gray sub-text-font">
             Event #: <span className={`text-black ${pending ? pendingClasses : ""}`}>{eventResults ? eventResults[0]?.eventId : "N/A"}</span>
           </p>
         </div>
