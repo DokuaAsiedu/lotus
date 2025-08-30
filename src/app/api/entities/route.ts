@@ -12,8 +12,7 @@ export async function GET(req: NextRequest) {
       redirect("/login")
     }
 
-    let url = `${BASE_URL}/reports/sales/retailers`
-
+    let url = `${BASE_URL}/entity`
     const searchParamsArray = <string[]>[]
 
     req.nextUrl.searchParams.forEach((value, key) => {
@@ -51,6 +50,8 @@ export async function GET(req: NextRequest) {
       destroySession()
       redirect("/login")
     }
+
+    console.log({token})
 
     return Response.json(res)
   } catch (err) {
