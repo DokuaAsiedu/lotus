@@ -268,7 +268,7 @@ export function Retailers() {
 export function Winnings() {
   const [pending, setPending] = useState(true)
   const [eventResults, setEventResults] = useState<EventResult[]>([]);
-  const [drawDate, setDrawDate] = useState(getFormattedDate(new Date(), {monthFirst: true, separator: "/"}))
+  const [drawDate, setDrawDate] = useState<string | null>(null)
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   async function fetchData() {
@@ -291,6 +291,14 @@ export function Winnings() {
     }
   }
 
+  function initializeDate() {
+    const today = new Date()
+    const yesterday = new Date(today)
+
+    yesterday.setDate(yesterday.getDate() - 1)
+    setDrawDate(getFormattedDate(yesterday, {monthFirst: true, separator: "/"}))
+  }
+
   function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
     const date = formatDateString(e.currentTarget.value)
     setDrawDate(date)
@@ -299,6 +307,10 @@ export function Winnings() {
   useEffect(() => {
     fetchData()
   }, [drawDate])
+
+  useEffect(() => {
+    initializeDate()
+  })
 
   return (
     <div className="h-full flex flex-col">
