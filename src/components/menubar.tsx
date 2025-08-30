@@ -35,6 +35,7 @@ export function MenuBar() {
       const response = await fetch(url);
       const res = await response.json()
       setGames(res.data)
+      handleSelectedGames(res.data)
     } catch (err) {
       console.log(err)
     } finally {
@@ -70,7 +71,7 @@ export function MenuBar() {
         {pending ? <Spinner /> : games?.map((item, index) => {
           return (
             <div key={`item-${index}`} className="flex items-center gap-3">
-              <input name="name" id={`item-${item.id}`} type="checkbox" onChange={() => handleGame(item.id)} />
+              <input name="name" id={`item-${item.id}`} type="checkbox" onChange={() => handleGame(item.id)} checked={selectedGames.find((elem) => elem.id == item.id) ? true : false} />
               <label htmlFor={`item-${item.id}`}>{item.name}</label>
             </div>
           )
