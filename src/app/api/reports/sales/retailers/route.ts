@@ -35,6 +35,13 @@ export async function GET() {
       throw new Error(res.message)
     }
 
+    if (res.message == "Route [login] not defined.") {
+      destroySession()
+      redirect("/login")
+    }
+
+    console.log({token})
+
     return Response.json(res)
   } catch (err) {
     const response = {
