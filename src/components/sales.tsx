@@ -37,7 +37,7 @@ const pendingClasses = "bg-zinc-200 text-transparent animate-pulse";
 export function Summary() {
   const [pending, setPending] = useState(true)
   const [summary, setSummary] = useState<SalesResponse | null>(null);
-  const {selectedGames} = useAppState()
+  const { selectedGames } = useAppState()
 
   async function fetchData() {
     const today = getFormattedDate(new Date())
@@ -90,13 +90,13 @@ type StakeWithCoupon = Stake & { coupon: string }
 export function Tickets() {
   const [pending, setPending] = useState(true)
   const [tickets, setTickets] = useState<StakeWithCoupon[]>([]);
-  const {selectedGames} = useAppState()
+  const { selectedGames } = useAppState()
 
   async function fetchData() {
     setPending(true);
     try {
       const gameIds = selectedGames.map((item) => `gameId[]=${item.id}`).join("&")
-      const date = getFormattedDate(new Date(), {monthFirst: true})
+      const date = getFormattedDate(new Date(), { monthFirst: true })
       const url = `/api/stakes?startDate=${date}&endDate=${date}&${gameIds}`
       const response = await fetch(url);
       const res = await response.json()
@@ -142,9 +142,9 @@ export function Tickets() {
         <div className="col-span-3">Retailers</div>
       </div>
       <div className="overflow-auto">
-        {pending ? 
-          placeholderRow(<Spinner />) : 
-          tickets && tickets.length ? 
+        {pending ?
+          placeholderRow(<Spinner />) :
+          tickets && tickets.length ?
             tickets.map((item, index) => {
               return (
                 <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 border-t-1 border-t-light-gray">
@@ -162,7 +162,7 @@ export function Tickets() {
                   </div>
                   <div className="col-span-3 flex items-center gap-3">
                     <div className="grid place-items-center">
-                      <Image src={profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square"/>
+                      <Image src={profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
                     </div>
                     <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
                       <span>{item.retailClient.name || "N/A"}</span>
@@ -171,8 +171,8 @@ export function Tickets() {
                   </div>
                 </div>
               )
-            }) : 
-          placeholderRow(<Placeholder text="No Stakes available for today" />)
+            }) :
+            placeholderRow(<Placeholder text="No Stakes available for today" />)
         }
       </div>
     </div>
@@ -186,7 +186,7 @@ export function Retailers() {
   async function fetchData() {
     setPending(true);
     try {
-      const date = getFormattedDate(new Date(), {monthFirst: true})
+      const date = getFormattedDate(new Date(), { monthFirst: true })
       const url = `/api/reports/sales/retailers?from=${date}&to=${date}`
       const response = await fetch(url);
       const res = await response.json()
@@ -238,8 +238,8 @@ export function Retailers() {
           <div className="col-span-1">Stake #</div>
         </div>
         <div className="grow overflow-auto">
-          {pending ? 
-            placeholderRow(<Spinner />) : 
+          {pending ?
+            placeholderRow(<Spinner />) :
             retailerSummary?.retailers?.map((item, index) => {
               return (
                 <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center even:bg-white-smoke">
@@ -256,7 +256,7 @@ export function Retailers() {
                   <div className={`${inter.className} col-span-1 me-4 text-end`}>{item.totalStakes}</div>
                 </div>
               )
-            }) ?? 
+            }) ??
             placeholderRow(<Placeholder text="Retailers not available" />)
           }
         </div>
@@ -268,7 +268,7 @@ export function Retailers() {
 export function Winnings() {
   const [pending, setPending] = useState(true)
   const [eventResults, setEventResults] = useState<EventResult[]>([]);
-  const [drawDate, setDrawDate] = useState<string | null>(null)
+  const [drawDate, setDrawDate] = useState("")
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   async function fetchData() {
@@ -296,7 +296,8 @@ export function Winnings() {
     const yesterday = new Date(today)
 
     yesterday.setDate(yesterday.getDate() - 1)
-    setDrawDate(getFormattedDate(yesterday, {monthFirst: true, separator: "/"}))
+    const date = getFormattedDate(yesterday, { monthFirst: true })
+    setDrawDate(date)
   }
 
   function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -305,12 +306,12 @@ export function Winnings() {
   }
 
   useEffect(() => {
-    fetchData()
+    if (drawDate) fetchData()
   }, [drawDate])
 
   useEffect(() => {
     initializeDate()
-  })
+  }, [])
 
   return (
     <div className="h-full flex flex-col">
@@ -323,7 +324,7 @@ export function Winnings() {
           <div className={`${montserrat.className} flex flex-col text-smokey-gray`}>
             <span className=" font-bold">Draw Date</span>
             <div className="p-2 flex items-center gap-2 border-light-gray border-1 rounded-sm text-black">
-              <span>{drawDate ?? "N/A"} |</span>
+              <span>{drawDate ? drawDate.split("-").join("/") : "N/A"} |</span>
               <button type="button" className="self-stretch aspect-square grid place-items-center" onClick={handleDrawDate}>
                 <Image src={calendarIcon} alt="calendaricon" height={20} width={20} className="h-full aspect-square" />
                 <input type="date" ref={dateInputRef} onChange={handleDateChange} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
@@ -349,33 +350,33 @@ export function Winnings() {
         </div>
       </div>
       <div className="grow px-4 overflow-auto">
-        {pending ? 
+        {pending ?
           <div className="p-6 flex flex-col items-center justify-center">
-            <Spinner/>
-          </div> : 
+            <Spinner />
+          </div> :
           (eventResults && eventResults.length && eventResults[0].winners.length) ? eventResults[0]?.winners.map((item, index) => {
-          return (
-            <div key={`index-${index}`} className="py-4 grid grid-cols-2 gap-2 border-b-1 border-b-[#E0E0E0]">
-              <div className="flex flex-col gap-2">
-                <div className="col-span-1 grid grid-cols-5 gap-2">
-                  {item.stake.split(",").map((elem, pos) => {
-                    return (
-                      <div key={`elem-${pos}`} className={`${inter.className} w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
-                    )
-                  }) ?? <Placeholder />}
+            return (
+              <div key={`index-${index}`} className="py-4 grid grid-cols-2 gap-2 border-b-1 border-b-[#E0E0E0]">
+                <div className="flex flex-col gap-2">
+                  <div className="col-span-1 grid grid-cols-5 gap-2">
+                    {item.stake.split(",").map((elem, pos) => {
+                      return (
+                        <div key={`elem-${pos}`} className={`${inter.className} w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
+                      )
+                    }) ?? <Placeholder />}
+                  </div>
+                  <p className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.play ?? "N/A"} | 5/90 Original</p>
                 </div>
-                <p className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.play ?? "N/A"} | 5/90 Original</p>
+                <div className="col-span-1 flex flex-col items-end justify-between">
+                  <span className={`${jura.className} text-end sub-number-font`}>{item.amount ?? 0}</span>
+                  <span className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
+                </div>
               </div>
-              <div className="col-span-1 flex flex-col items-end justify-between">
-                <span className={`${jura.className} text-end sub-number-font`}>{item.amount ?? 0}</span>
-                <span className={`${montserrat.className} text-smokey-gray sub-text-font`}>{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
-              </div>
+            )
+          }) :
+            <div className={`p-6 flex flex-col items-center justify-center ${inter.className}`}>
+              <Placeholder text="Winnings not available" />
             </div>
-          )
-          }) : 
-          <div className={`p-6 flex flex-col items-center justify-center ${inter.className}`}>
-            <Placeholder text="Winnings not available"/>
-          </div>
         }
       </div>
     </div>
