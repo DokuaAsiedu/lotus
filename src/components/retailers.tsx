@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Montserrat, Jura, Golos_Text } from "next/font/google";
 import { useEffect, useState } from "react";
-import { Entity, EntityStats, Game, RetailerPaneChildProps, RetailerTab, Stake, TicketResponse, Wallet } from "@/types";
+import { Entity, EntityStats, Game, RetailerPaneChildProps, RetailerSummary, RetailerTab, Stake, TicketResponse, Wallet } from "@/types";
 import { Placeholder, Spinner } from "./general";
 import { formatPhoneNumber, getFormattedDate } from "@/lib/helpers";
 import callIcon from "../../public/icons/call.png"
@@ -30,6 +30,7 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
   const [retailers, setRetailers] = useState<Entity[] | null>(null);
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredRetailers, setFilteredRetailers] = useState<Entity[] | null>(null)
+  const [retailerSummary, setRetailerSummary] = useState<RetailerSummary | null>(null);
 
   function selectRetailer(id: string) {
     const match = retailers?.find((item) => item.id == id)
@@ -66,9 +67,26 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
     }
   }
 
+  async function fetchRetailerSummary() {
+    try {
+      const date = getFormattedDate(new Date(), { monthFirst: true })
+      const url = `/api/reports/sales/retailers`
+      const response = await fetch(url);
+      const res = await response.json()
+
+      setRetailerSummary(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     fetchData()
   }, [])
+
+  useEffect(() => {
+    fetchRetailerSummary()
+  }, [retailers])
 
   const placeholderRow = (children: React.ReactNode) => {
     return (
@@ -108,7 +126,7 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
                     <span className="text-smokey-gray sub-text-font">{item.contact.phone ? formatPhoneNumber(item.contact.phone) : "N/A"}</span>
                   </div>
                   <div className="grid place-items-center">
-                    <div className="w-4 aspect-square bg-blue-500 rounded-full"></div>
+                    {(retailerSummary?.retailers.some((elem) => elem.retailClient.id == item.id)) && <div className="w-4 aspect-square bg-blue-500 rounded-full"></div>}
                   </div>
                 </div>
               </button>
@@ -243,7 +261,6 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Entity | undefine
     try {
       const gameIds = games.map((item) => `gameId[]=${item.id}`).join("&")
       const url = `/api/stakes?entityId=${activeRetailer?.id}&${gameIds}`
-      console.log(url)
       const response = await fetch(url);
       const res = await response.json()
 
