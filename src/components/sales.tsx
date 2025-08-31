@@ -133,9 +133,67 @@ export function Tickets() {
     )
   }
 
+  const placeholderTableRow = (children: React.ReactNode) => {
+    return (
+      <tr>
+        <td colSpan={6}>
+          <div className="p-6 w-full flex justify-center">
+            {children}
+          </div>
+        </td>
+      </tr>
+    )
+  }
+
   return (
-    <div className={`h-full ${inter.className} flex flex-col`}>
-      <div className="p-6 grid grid-cols-9 gap-4 font-bold">
+    <div className={`h-full ${inter.className} overflow-auto`}>
+      <table className="w-full">
+        <thead className="sticky top-0 bg-white z-0">
+          <tr>
+            <th className="py-4 ps-6 text-start">Ticket #</th>
+            <th className="py-4 text-start">Play</th>
+            <th className="py-4 text-start">Stakes</th>
+            <th className="py-4 text-start">Amount</th>
+            <th className="py-4 text-start">Time</th>
+            <th className="py-4 pe-6 text-start"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {pending ? 
+            placeholderTableRow(<Spinner />) : 
+            tickets && tickets.length ? 
+            tickets.map((item, index) => (
+              <tr key={`index-${index}`} className="border-t-1 border-t-pearl-bush">
+                <td className="py-4 ps-6">
+                  <div className="flex flex-col gap-2">
+                    <span>{item.ticketNumber ?? "N/A"}</span>
+                    <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
+                  </div>
+                </td>
+                <td className="py-4">{item.play || "N/A"}</td>
+                <td className="py-4">
+                  <div className="flex gap-2">
+                    {item.stake.split(",").map((elem, index) => {
+                      return (
+                        <div key={`elem-${index}`} className={`w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
+                      )
+                    })}
+                  </div>
+                </td>
+                <td className="py-4">{item.stakeAmount || "N/A"}</td>
+                <td className="py-4">{item.createdAt ? item.createdAt.split(" ")[1] : "N/A"}</td>
+                <td className="py-4 pe-6">
+                  <div className="grid place-items-center">
+                    <Image src={item.retailClient.profileImage || profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
+                  </div>
+                </td>
+              </tr>
+            )) : 
+            placeholderTableRow(<Placeholder text="No Stakes available for today" />)
+          }
+        </tbody>
+      </table>
+      {/* <div className="p-6 grid grid-cols-9 gap-4 font-bold">
         <div className="col-span-2">Ticket #</div>
         <div className="col-span-1">Play</div>
         <div className="col-span-3">Stakes</div>
@@ -174,7 +232,7 @@ export function Tickets() {
             }) :
             placeholderRow(<Placeholder text="No Stakes available for today" />)
         }
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -213,7 +271,7 @@ export function Retailers() {
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
           <span className={`${golosText.className} font-semibold header-font`}>Retailers</span>
-          <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.totalRetailers ?? 0}</span>
+          <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.retailers.length || 0} / {retailerSummary?.totalRetailers ?? 0}</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
           <input type="search" className={`border-0! placeholder:Montserrat`} placeholder="Enter phone number or name" />
