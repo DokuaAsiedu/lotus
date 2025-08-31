@@ -388,6 +388,8 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefin
       if (!res.data) {
         res.data = []
       }
+      const PERSONAL = 'personal';
+      res.data = res.data.filter((item: Wallet) => item.walletName.toLowerCase() != PERSONAL)
 
       setWallets(res.data)
       setActiveWallet(null)
