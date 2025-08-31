@@ -179,7 +179,7 @@ export function RetailerCard({ activeRetailer }: { activeRetailer: Entity | unde
         <div className="flex flex-col gap-3">
           <div className="flex items-end gap-2">
             <h1 className="font-bold emphasis-font">{activeRetailer?.profile?.name || "N/A"}</h1>
-            <span className={`${golosText.className} text-heavy-metal`}>Active</span>
+            <span className={`${golosText.className} text-heavy-metal`}>{activeRetailer?.id} Active</span>
           </div>
           <div className="flex gap-20 font-bold">
             <div className="flex flex-col">
