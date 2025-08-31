@@ -59,6 +59,7 @@ export interface Stake {
   stake: string;
   createdAt: string;
   stakeAmount: string;
+  playerPhoneNumber?: string;
   retailClient: RetailClient;
 }
 

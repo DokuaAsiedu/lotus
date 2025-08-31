@@ -344,9 +344,15 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Entity | undefine
                   <td className="py-4 px-2">{item.createdAt || "N/A"}</td>
                   <td className="py-4 px-2">{item.game.name || "N/A"}</td>
                   <td className="py-4 px-2">{item.play || "N/A"}</td>
-                  <td className="py-4 px-2">{item.game.name || "N/A"}</td>
+                  <td className="py-4 px-2">
+                    <div className="flex gap-2">
+                      {(item.stake && item.stake.length) ? item.stake.split(",").map((elem, index) => (
+                        <div key={`elem-${index}`} className={`w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
+                      )) : "N/A"}
+                    </div>
+                  </td>
                   <td className="py-4 px-2">{item.stakeAmount || "N/A"}</td>
-                  <td className="py-4 px-2">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</td>
+                  <td className="py-4 px-2">{item.playerPhoneNumber ? formatPhoneNumber(item.playerPhoneNumber) : "N/A"}</td>
                 </tr>
               )
             }) : (activeRetailer && !tickets.length) && placeholderRow(<Placeholder text="Tickets not available" />)
