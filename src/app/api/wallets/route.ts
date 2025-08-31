@@ -12,11 +12,18 @@ export async function GET(req: NextRequest) {
       redirect("/login")
     }
 
-    const entityId = req.nextUrl.searchParams.get("entityId")
-    const startDate = req.nextUrl.searchParams.get("startDate")
-    const endDate = req.nextUrl.searchParams.get("endDate")
+    let url = `${BASE_URL}/wallet/history`
 
-    const url = `${BASE_URL}/wallet/history?entityId=${entityId}&from=${startDate}&to=${endDate}`
+    const searchParamsArray = <string[]>[]
+
+    req.nextUrl.searchParams.forEach((value, key) => {
+      searchParamsArray.push(`${key}=${value}`)
+    })
+    const searchParams = searchParamsArray.join("&")
+
+    if (searchParams) {
+      url += "?" + searchParams
+    }
 
     const response = await fetch(url, {
       headers: {

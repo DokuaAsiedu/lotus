@@ -370,8 +370,7 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefin
   async function fetchData() {
     setPending(true);
     try {
-      const date = getFormattedDate(new Date(), { monthFirst: true })
-      const url = `/api/wallets?entityId=${activeRetailer?.id}&startDate=${date}&endDate=${date}`
+      const url = `/api/wallets?entityId=${activeRetailer?.id}`
       const response = await fetch(url);
       const res = await response.json()
 
