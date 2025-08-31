@@ -69,7 +69,6 @@ export function RetailersPane({ handleActiveRetailer }: RetailerPaneChildProps) 
 
   async function fetchRetailerSummary() {
     try {
-      const date = getFormattedDate(new Date(), { monthFirst: true })
       const url = `/api/reports/sales/retailers`
       const response = await fetch(url);
       const res = await response.json()
@@ -370,41 +369,33 @@ function SalesTabContent({ activeRetailer }: { activeRetailer: Entity | undefine
 
 function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   const [pending, setPending] = useState(false)
-  const [wallets, setWallets] = useState<Wallet[]>([])
+  const [walletHistory, setWalletHistory] = useState<Wallet | null>(null)
   const [activeWallet, setActiveWallet] = useState<Wallet | null>(null)
+  const IN_USE = 'y';
 
-  function handleActiveWallet(id: number) {
-    const match = wallets.find((item) => item.walletId == id)
-    if (match) setActiveWallet(match)
+  async function handleActiveWallet(id: number) {
+    const match = activeRetailer?.wallet.find((item) => item.walletId == id)
+    if (match) {
+      setActiveWallet(match)
+      await fetchwalletHistory(match.walletId)
+    }
   }
 
-  async function fetchData() {
+  async function fetchwalletHistory(walletId: number) {
     setPending(true);
     try {
-      const url = `/api/wallets?entityId=${activeRetailer?.id}`
+      setPending(true)
+      const url = `/api/wallets?entityId=${activeRetailer?.id}&walletId=${walletId}`
       const response = await fetch(url);
       const res = await response.json()
 
-      if (!res.data) {
-        res.data = []
-      }
-      const PERSONAL = 'personal';
-      res.data = res.data.filter((item: Wallet) => item.walletName.toLowerCase() != PERSONAL)
-
-      setWallets(res.data)
-      setActiveWallet(null)
+      setWalletHistory(res.data[0])
     } catch (err) {
       console.log(err)
     } finally {
       setPending(false);
     }
   }
-
-  useEffect(() => {
-    if (activeRetailer) {
-      fetchData()
-    }
-  }, [activeRetailer])
 
   const placeholderCont = (children: React.ReactNode) => {
     return (
@@ -431,19 +422,14 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefin
   return (
     <div className={`h-full flex flex-col gap-6 ${montserrat.className}`}>
       <div className="basis-[15%] p-6 flex gap-6">
-        {pending ?
-          placeholderCont(<Spinner />) :
-          wallets.map((item, index, arr) => {
-            if (!arr.length) {
-              return placeholderCont(<Placeholder text="Wallets not available" />)
-            }
+        {(activeRetailer.wallet && activeRetailer.wallet.length) ? activeRetailer.wallet.filter((item) => item.inUse?.toLowerCase() == IN_USE).map((item, index) => {
             return (
               <button key={`item-${index}`} type="button" className={`px-16 py-4 flex flex-col justify-center gap-2 rounded-lg ${activeWallet?.walletId == item.walletId ? "bg-pearl-bush" : " border-3 border-pearl-bush"} shadow-pearl-bush shadow-[0_4px_4px_0px] font-bold`} onClick={() => handleActiveWallet(item.walletId)}>
-                <span className="text-smokey-gray">{item?.walletName || "N/A"} - {item.walletAccountNumber || "N/A"}</span>
-                <h4 className={`${jura.className} main-number-font`}>{item.balance || "N/A"}</h4>
+                <span className="text-smokey-gray">{item?.walletTypeName || "N/A"} - {item.accountNumber || "N/A"}</span>
+                <h4 className={`${jura.className} main-number-font`}>{item.walletBalance || "N/A"}</h4>
               </button>
             )
-          })
+          }) : placeholderCont(<Placeholder text="Wallets not available" />)
         }
       </div>
       <div className="grow overflow-auto">
@@ -460,7 +446,9 @@ function WalletTabContent({ activeRetailer }: { activeRetailer: Entity | undefin
           <tbody>
             {!activeWallet ?
               placeholderRow(<Placeholder text="Select a wallet to view its transaction history" />) :
-              activeWallet?.history?.length ? activeWallet.history.map((elem, index) => {
+              pending ? 
+              placeholderRow(<Spinner />) : 
+              (walletHistory?.history && walletHistory.history.length) ? walletHistory.history.map((elem, index) => {
                 return (
                   <tr key={`item-${index}`} className="border-b-1 border-b-pearl-bush">
                     <td className="ps-4 pe-2 py-6">{elem.transactionDateTime || "N/A"}</td>

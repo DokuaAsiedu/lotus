@@ -23,9 +23,12 @@ export interface Wallet {
   entityId?: number;
   walletId: number;
   walletName: string;
+  walletTypeName: string;
   walletTypeId?: number,
   walletAccountNumber?: string;
+  accountNumber?: string;
   balance?: string;
+  inUse?: string;
   walletBalance?: string;
   history?: WalletTransaction[];
 }
