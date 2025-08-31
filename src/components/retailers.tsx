@@ -226,6 +226,11 @@ const tabs: RetailerTab[] = [
     content: WalletTabContent,
   },
   {
+    id: "issues",
+    name: "Issues",
+    content: IssuesTabContent,
+  },
+  {
     id: "notification",
     name: "Notification",
     content: NotificationTabContent,
@@ -478,5 +483,9 @@ function InsightTabContent({ activeRetailer }: { activeRetailer: Entity | undefi
 }
 
 function NotificationTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
+  return <div></div>
+}
+
+function IssuesTabContent({ activeRetailer }: { activeRetailer: Entity | undefined }) {
   return <div></div>
 }
