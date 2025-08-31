@@ -44,7 +44,7 @@ export function Summary() {
     setPending(true);
     try {
       const gameIds = selectedGames.map((item) => `gameId[]=${item.id}`).join("&")
-      const url = `/api/sales?startDate=${today}&endDate=${today}&${gameIds}`
+      const url = `/api/sales?to=${today}&from=${today}&${gameIds}`
       const response = await fetch(url);
       const res = await response.json()
       setSummary(res.data)

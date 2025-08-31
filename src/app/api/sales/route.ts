@@ -12,11 +12,18 @@ export async function GET(req: NextRequest) {
       redirect("/login")
     }
 
-    const gameIds = req.nextUrl.searchParams.getAll("gameId[]").map((item) => `gameId[]=${item}`).join("&")
-    const startDate = req.nextUrl.searchParams.get("startDate")
-    const endDate = req.nextUrl.searchParams.get("endDate")
+    let url = `${BASE_URL}/reports/sales/total`
 
-    const url = `${BASE_URL}/reports/sales/total?from=${startDate}&to=${endDate}&${gameIds}`
+    const searchParamsArray = <string[]>[]
+
+    req.nextUrl.searchParams.forEach((value, key) => {
+      searchParamsArray.push(`${key}=${value}`)
+    })
+    const searchParams = searchParamsArray.join("&")
+
+    if (searchParams) {
+      url += "?" + searchParams
+    }
 
     const response = await fetch(url, {
       headers: {
