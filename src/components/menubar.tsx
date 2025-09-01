@@ -34,6 +34,9 @@ export function MenuBar() {
       const url = "/api/games"
       const response = await fetch(url);
       const res = await response.json()
+      if (!res.data || !res.data.length) {
+        res.data = []
+      }
       setGames(res.data)
       handleSelectedGames(res.data)
     } catch (err) {
@@ -68,14 +71,14 @@ export function MenuBar() {
             height={10}
           />
         </button>
-        {pending ? <Spinner /> : games?.map((item, index) => {
+        {pending ? <Spinner /> : (games && games.length) ? games.map((item, index) => {
           return (
             <div key={`item-${index}`} className="flex items-center gap-3">
               <input name="name" id={`item-${item.id}`} type="checkbox" onChange={() => handleGame(item.id)} checked={selectedGames.find((elem) => elem.id == item.id) ? true : false} />
               <label htmlFor={`item-${item.id}`}>{item.name}</label>
             </div>
           )
-        }) ?? <Placeholder text="Games not available" />}
+        }) : <Placeholder text="Games not available" />}
       </div>
       {/* <div className={`flex items-center gap-4`}>
         <span className={`${montserrat.className} font-bold text-sm`}>Next Draw In</span>

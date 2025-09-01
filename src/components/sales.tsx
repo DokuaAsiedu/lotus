@@ -124,7 +124,7 @@ export function Tickets() {
   }
 
   useEffect(() => {
-    if (selectedGames.length) fetchData()
+    fetchData()
   }, [selectedGames])
 
   const placeholderRow = (children: React.ReactNode) => {
