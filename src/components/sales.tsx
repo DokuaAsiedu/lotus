@@ -3,13 +3,14 @@
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate } from "@/lib/helpers"
-import { EventResult, RetailerSummary, SalesResponse, Stake, TicketResponse } from "@/types"
+import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate, getTime } from "@/lib/helpers"
+import { EventResult, RetailerSummary, SalesResponse, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 import profileAvatar from "@public/avatar-sheena.png"
 import calendarIcon from "@public/icons/calendar.png"
 import magnifyingGlassIcon from "@public/icons/magnifying-glass.png"
 import qrCodeIcon from "@public/icons/qr-code.png"
+import optionsIcon from "@public/icons/options.png"
 import { useAppState } from "@/providers/state-provider"
 
 const jura = Jura({
@@ -85,12 +86,61 @@ export function Summary() {
   )
 }
 
-type StakeWithCoupon = Stake & { coupon: string }
-
 export function Tickets() {
   const [pending, setPending] = useState(true)
-  const [tickets, setTickets] = useState<StakeWithCoupon[]>([]);
+  const [tickets, setTickets] = useState<TicketResponse[]>([]);
   const { selectedGames } = useAppState()
+  const optionsRef = useRef<HTMLButtonElement[]>([])
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const { setDropdownTrigger, setDropdownChildren } = useAppState()
+
+  function handleDropdown(index: number, coupon: string) {
+    // setOpenIndex(openIndex === index ? null : index)
+    const el = optionsRef.current[index]
+    
+    const match = tickets.find((item) => item.coupon == coupon)
+    if (match) {
+      console.log(el, match)
+      setDropdownChildren(dropdownEl(match))
+      setDropdownTrigger(el)
+    }
+  }
+
+  function assignRef(el: HTMLButtonElement | null, index: number) {
+    if (el) {
+      optionsRef.current[index] = el
+    }
+  }
+
+  const dropdownEl = (item: TicketResponse) => (
+    <table>
+      <tbody>
+        {item.Stakes.filter((_, pos) => pos != 0).map((elem, pos) => (
+          <tr key={`item-${pos}`} className={`border-t-1 border-t-pearl-bush ${inter.className}`}>
+            <td className="py-4 ps-4 text-nowrap">
+              <div className="flex flex-col gap-2">
+                <span>{elem.ticketNumber || "N/A"}</span>
+                <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{elem.game?.name || "N/A"}</span>
+              </div>
+            </td>
+            <td className="py-4 ps-4 text-nowrap">{elem.play || "N/A"}</td>
+            <td className="py-4 ps-4 text-nowrap">
+              <div className="flex gap-2">
+                {elem.stake.split(",").map((thing, place) => {
+                  return (
+                    <div key={`elem-${place}`} className={`w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{thing}</div>
+                  )
+                })}
+              </div>
+            </td>
+            <td className="py-4 ps-4 text-nowrap">{elem.stakeAmount || "N/A"}</td>
+            <td className="py-4 px-4 text-nowrap">{elem.createdAt ? getTime(elem.createdAt) : "N/A"}</td>
+          </tr>
+        ))}
+        
+      </tbody>
+    </table>
+  )
 
   async function fetchData() {
     setPending(true);
@@ -101,21 +151,11 @@ export function Tickets() {
       const response = await fetch(url);
       const res = await response.json()
 
-      const arr: StakeWithCoupon[] = [];
-
-      if (!res.data) {
+      if (!res.data || !res.data.length) {
         res.data = []
       }
 
-      res.data.forEach((item: TicketResponse, index: number) => {
-        item.Stakes.forEach((elem: Stake) => {
-          arr.push({
-            ...elem,
-            coupon: item.coupon,
-          })
-        })
-      })
-      setTickets(arr)
+      setTickets(res.data)
     } catch (err) {
       console.log(err)
     } finally {
@@ -126,12 +166,6 @@ export function Tickets() {
   useEffect(() => {
     fetchData()
   }, [selectedGames])
-
-  const placeholderRow = (children: React.ReactNode) => {
-    return (
-      <div className={`p-6 flex justify-center ${inter.className}`}>{children}</div>
-    )
-  }
 
   const placeholderTableRow = (children: React.ReactNode) => {
     return (
@@ -146,7 +180,7 @@ export function Tickets() {
   }
 
   return (
-    <div className={`h-full ${inter.className} overflow-auto`}>
+    <div className={`h-full ${inter.className} overflow-auto relative top-0 left-0 z-[1]`}>
       <table className="w-full">
         <thead className="sticky top-0 bg-white z-0">
           <tr>
@@ -161,78 +195,45 @@ export function Tickets() {
         <tbody>
           {pending ? 
             placeholderTableRow(<Spinner />) : 
-            tickets && tickets.length ? 
-            tickets.map((item, index) => (
-              <tr key={`index-${index}`} className="border-t-1 border-t-pearl-bush">
-                <td className="py-4 ps-6">
-                  <div className="flex flex-col gap-2">
-                    <span>{item.ticketNumber ?? "N/A"}</span>
-                    <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
-                  </div>
-                </td>
-                <td className="py-4">{item.play || "N/A"}</td>
-                <td className="py-4">
-                  <div className="flex gap-2">
-                    {item.stake.split(",").map((elem, index) => {
-                      return (
-                        <div key={`elem-${index}`} className={`w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
-                      )
-                    })}
-                  </div>
-                </td>
-                <td className="py-4">{item.stakeAmount || "N/A"}</td>
-                <td className="py-4">{item.createdAt ? item.createdAt.split(" ")[1] : "N/A"}</td>
-                <td className="py-4 pe-6">
-                  <div className="grid place-items-center">
-                    <Image src={item.retailClient.profileImage || profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
-                  </div>
-                </td>
-              </tr>
-            )) : 
+            (tickets && tickets.length) ? 
+            tickets.map((item, index) => {
+              return (
+                <tr key={`index-${index}`} className="border-t-1 border-t-pearl-bush">
+                  <td className="py-4 ps-6">
+                    <div className="flex flex-col gap-2">
+                      <span>{item.Stakes[0].ticketNumber || "N/A"}</span>
+                      <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{item?.Stakes[0].game?.name || "N/A"}</span>
+                    </div>
+                  </td>
+                  <td className="py-4">{item.Stakes[0].play || "N/A"}</td>
+                  <td className="py-4">
+                    <div className="flex gap-2">
+                      {item.Stakes.length > 1 && (
+                        <button type="button" className="grid place-items-center" onClick={() => handleDropdown(index, item.coupon)} ref={(el) => assignRef(el, index)}>
+                          <Image src={optionsIcon} alt="options icon" width={16} height={16} />
+                        </button>
+                      )}
+                      {item.Stakes[0].stake.split(",").map((elem, index) => {
+                        return (
+                          <div key={`elem-${index}`} className={`w-max px-1 grid place-items-center aspect-square rounded-sm border-1 border-light-gray font-semibold`}>{elem}</div>
+                        )
+                      })}
+                    </div>
+                  </td>
+                  <td className="py-4">{item.Stakes[0].stakeAmount || "N/A"}</td>
+                  <td className="py-4">{item.Stakes[0].createdAt ? getTime(item.Stakes[0].createdAt) : "N/A"}</td>
+                  <td className="py-4 pe-6">
+                    <div className="grid place-items-center">
+                      <Image src={item.Stakes[0].retailClient.profileImage || profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
+                    </div>
+                  </td>
+                </tr>
+              )
+            }) : 
             placeholderTableRow(<Placeholder text="No Stakes available for today" />)
           }
         </tbody>
       </table>
-      {/* <div className="p-6 grid grid-cols-9 gap-4 font-bold">
-        <div className="col-span-2">Ticket #</div>
-        <div className="col-span-1">Play</div>
-        <div className="col-span-3">Stakes</div>
-        <div className="col-span-3">Retailers</div>
-      </div>
-      <div className="overflow-auto">
-        {pending ?
-          placeholderRow(<Spinner />) :
-          tickets && tickets.length ?
-            tickets.map((item, index) => {
-              return (
-                <div key={`index-${index}`} className="p-6 grid grid-cols-9 gap-4 border-t-1 border-t-light-gray">
-                  <div className="col-span-2 flex flex-col gap-2">
-                    <span>{item.ticketNumber ?? "N/A"}</span>
-                    <span className={`sub-text-font text-smokey-gray ${montserrat.className}`}>{item?.game?.name || "N/A"}</span>
-                  </div>
-                  <div className="col-span-1">{item.play}</div>
-                  <div className="col-span-3 grid grid-cols-5 flex-wrap gap-2">
-                    {item.stake.split(",").map((elem, pos) => {
-                      return (
-                        <div key={`index-${pos}`} className="grow aspect-square grid place-items-center border-1 border-light-gray rounded-md font-semibold">{elem}</div>
-                      )
-                    })}
-                  </div>
-                  <div className="col-span-3 flex items-center gap-3">
-                    <div className="grid place-items-center">
-                      <Image src={profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
-                    </div>
-                    <div className={`${montserrat.className} flex flex-col justify-center gap-1`}>
-                      <span>{item.retailClient.name || "N/A"}</span>
-                      <span className="sub-text-font text-smokey-gray">{item.retailClient.contact.phone ? formatPhoneNumber(item.retailClient.contact.phone) : "N/A"}</span>
-                    </div>
-                  </div>
-                </div>
-              )
-            }) :
-            placeholderRow(<Placeholder text="No Stakes available for today" />)
-        }
-      </div> */}
     </div>
   )
 }
@@ -271,7 +272,7 @@ export function Retailers() {
       <div className={`${montserrat.className} px-6 py-4 flex items-center justify-between border-b-1 border-b-light-gray`}>
         <div className="flex flex-col justify-center gap-1">
           <span className={`${golosText.className} font-semibold header-font`}>Retailers</span>
-          <span className={`text-smokey-gray font-bold ${pending ? pendingClasses : ""}`}>{retailerSummary?.retailers.length || 0} / {retailerSummary?.totalRetailers ?? 0}</span>
+          <span className={`text-smokey-gray sub-text-font ${pending ? pendingClasses : ""}`}><span className="font-bold">{retailerSummary?.retailers.length || 0}</span> / {retailerSummary?.totalRetailers ?? 0}</span>
         </div>
         <div className="flex items-center gap-2 border-t-0 border-b-1 border-b-light-gray">
           <input type="search" className={`border-0! placeholder:Montserrat`} placeholder="Enter phone number or name" />

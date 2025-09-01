@@ -38,3 +38,15 @@ export function formatMonthFirstDateString(date: string) {
 
   return formatted
 }
+
+export function getTime(dateString: string) {
+  const date = new Date(dateString)
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "pm" : "am";
+
+  hours = hours % 12 || 12;
+
+  return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
+}
