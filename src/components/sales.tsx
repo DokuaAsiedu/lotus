@@ -461,7 +461,7 @@ export function Payout() {
     <div className={`${montserrat.className} px-6 py-4 flex flex-col gap-2 font-bold text-smokey-gray`}>
       <h3>Payout Amount</h3>
       <p className={`${jura.className} text-black main-number-font ${winningsPending ? "placeholder" : ""}`}>GHS {winningsSummary?.payoutAmount || "0.00"}</p>
-      <span>to <span className={`${winningsPending ? "placeholder" : ""}`}>{winningsSummary?.totalNumOfPlayers || 0}</span> players</span>
+      <span>to <span className={`${winningsPending ? "placeholder" : ""}`}>{winningsSummary?.totalNumOfPlayers || 0}</span> {(winningsSummary?.totalNumOfPlayers && winningsSummary?.totalNumOfPlayers == 1) ? "player" : "players"}</span>
     </div>
   )
 }
