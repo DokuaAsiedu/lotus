@@ -298,7 +298,7 @@ export function Retailers() {
         <div className="grow overflow-auto">
           {pending ?
             placeholderRow(<Spinner />) :
-            retailerSummary?.retailers?.map((item, index) => {
+            (retailerSummary && retailerSummary.retailers && retailerSummary.retailers.length) ? retailerSummary?.retailers?.map((item, index) => {
               return (
                 <div key={`index-${index}`} className="p-6 grid grid-cols-6 gap-4 items-center even:bg-white-smoke">
                   <div className="col-span-3 flex items-center gap-3">
@@ -314,7 +314,7 @@ export function Retailers() {
                   <div className={`${inter.className} col-span-1 me-4 text-end`}>{item.totalStakes}</div>
                 </div>
               )
-            }) ??
+            }) :
             placeholderRow(<Placeholder text="Retailers not available" />)
           }
         </div>
