@@ -177,7 +177,7 @@ export function Tickets() {
   }
 
   return (
-    <div className={`h-full ${inter.className} overflow-auto relative top-0 left-0 z-[1]`}>
+    <div className={`h-full ${inter.className} overflow-auto`}>
       <table className="w-full">
         <thead className="sticky top-0 bg-white z-0">
           <tr>
