@@ -4,6 +4,7 @@ import React from 'react'
 import '@/app/globals.css'
 import { ToastrProvider } from "@/providers"
 import { AppStateProvider } from "@/providers/state-provider"
+import { Dropdown } from "@/components"
 
 export const metadata: Metadata = {
   title: 'Lotus',
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppStateProvider>
           {children}
           <ToastrProvider />
+          <Dropdown />
         </AppStateProvider>
       </body>
     </html>
