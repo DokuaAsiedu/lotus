@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate, getTime } from "@/lib/helpers"
+import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate, getTime, getValueFromCurrency } from "@/lib/helpers"
 import { EventResult, RetailerSummary, SalesResponse, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 import profileAvatar from "@public/avatar-sheena.png"
@@ -91,16 +91,13 @@ export function Tickets() {
   const [tickets, setTickets] = useState<TicketResponse[]>([]);
   const { selectedGames } = useAppState()
   const optionsRef = useRef<HTMLButtonElement[]>([])
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
   const { setDropdownTrigger, setDropdownChildren } = useAppState()
 
   function handleDropdown(index: number, coupon: string) {
-    // setOpenIndex(openIndex === index ? null : index)
     const el = optionsRef.current[index]
     
     const match = tickets.find((item) => item.coupon == coupon)
     if (match) {
-      console.log(el, match)
       setDropdownChildren(dropdownEl(match))
       setDropdownTrigger(el)
     }
@@ -329,18 +326,33 @@ export function Winnings() {
   const [eventResults, setEventResults] = useState<EventResult[]>([]);
   const [drawDate, setDrawDate] = useState("")
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const {winningsPending, setWinningsPending, winningsSummary, setWinningsSummary} = useAppState()
 
   async function fetchData() {
-    setPending(true);
+    setWinningsPending(true);
     try {
       const url = `/api/winnings?gameId=1&startDate=${drawDate}&endDate=${drawDate}`
       const response = await fetch(url);
       const res = await response.json()
+      if (!res.data || !res.data.length) {
+        res.data = []
+      }
       setEventResults(res.data)
+      let payoutAmount = 0
+      let totalNumOfPlayers = 0
+      res.data.forEach((item: EventResult) => {
+        payoutAmount += getValueFromCurrency(item.payoutAmount)
+        totalNumOfPlayers += Number(item.totalPlayers)
+      })
+      const obj = {
+        payoutAmount,
+        totalNumOfPlayers,
+      }
+      setWinningsSummary(obj)
     } catch (err) {
       console.log(err)
     } finally {
-      setPending(false);
+      setWinningsPending(false);
     }
   }
 
@@ -394,7 +406,7 @@ export function Winnings() {
         <div className={`${montserrat.className} flex items-center justify-between`}>
           <span className="font-normal header-font">5/90 Original +</span>
           <p className=" font-bold text-end text-smokey-gray sub-text-font">
-            Event #: <span className={`text-black ${pending ? pendingClasses : ""}`}>{eventResults ? eventResults[0]?.eventId : "N/A"}</span>
+            Event #: <span className={`text-black ${winningsPending ? pendingClasses : ""}`}>{eventResults ? eventResults[0]?.eventId : "N/A"}</span>
           </p>
         </div>
       </div>
@@ -409,7 +421,7 @@ export function Winnings() {
         </div>
       </div>
       <div className="grow px-4 overflow-auto">
-        {pending ?
+        {winningsPending ?
           <div className="p-6 flex flex-col items-center justify-center">
             <Spinner />
           </div> :
@@ -443,11 +455,13 @@ export function Winnings() {
 }
 
 export function Payout() {
+  const {winningsPending, winningsSummary} = useAppState()
+
   return (
     <div className={`${montserrat.className} px-6 py-4 flex flex-col gap-2 font-bold text-smokey-gray`}>
       <h3>Payout Amount</h3>
-      <p className={`${jura.className} text-black main-number-font`}>GHS 13,012,348.00</p>
-      <span>to 13,084 players</span>
+      <p className={`${jura.className} text-black main-number-font ${winningsPending ? "placeholder" : ""}`}>GHS {winningsSummary?.payoutAmount || "0.00"}</p>
+      <span>to <span className={`${winningsPending ? "placeholder" : ""}`}>{winningsSummary?.totalNumOfPlayers || 0}</span> players</span>
     </div>
   )
 }

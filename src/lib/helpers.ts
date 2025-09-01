@@ -50,3 +50,10 @@ export function getTime(dateString: string) {
 
   return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
 }
+
+export function getValueFromCurrency(value: string) {
+  const [, amountStr] = value.split(" ")
+  const amount = parseFloat(amountStr.replace(/,/g, "")) || 0
+
+  return amount
+}
