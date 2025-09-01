@@ -12,6 +12,7 @@ import burgerIcon from "@public/icons/burger-menu.png"
 import closeIcon from "@public/icons/close.png"
 import gearIcon from "@public/icons/gear.png"
 import magnifyingGlassIcon from "@public/icons/magnifying-glass.png"
+import { IoIosNotificationsOutline } from "react-icons/io";
 
 const golosText = Golos_Text({
   weight: ['400', '500', '800'],
@@ -117,25 +118,28 @@ export function Navbar() {
             )
           })}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div className="flex items-stretch gap-2">
-            <input
+            {/* <input
               type="search"
               className={`${inter.className}`}
               placeholder="Enter Search..."
-            />
-            <button type="button" className="aspect-square grid place-items-center px-2 border-2 border-light-gray rounded-md">
+            /> */}
+            <button type="button" className="aspect-square grid place-items-center">
               <Image
                 src={magnifyingGlassIcon}
                 alt="magnifying glass"
-                width={15}
-                height={15}
+                width={20}
+                height={20}
               />
             </button>
+            <button type="button" className="aspect-square grid place-items-center">
+              <IoIosNotificationsOutline className="text-2xl" />
+            </button>
+            <button type="button" className="">
+              <Image src={gearIcon} alt="gear icon" width={20} height={20} />
+            </button>
           </div>
-          <button type="button" className="p-2">
-            <Image src={gearIcon} alt="gear icon" width={20} height={20} />
-          </button>
           <button type="button" className="p-0.5 border-2 border-brandeis-blue rounded-full cursor-pointer">
             <Image src={loggedInUserIcon} alt="logged in user icon" width={35} height={35} className="aspect-square" />
           </button>
