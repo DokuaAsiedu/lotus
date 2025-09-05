@@ -51,6 +51,22 @@ export function getTime(dateString: string) {
   return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
 }
 
+export function getTimeFromFormattedDateString(dateString: string) {
+  const time = dateString.split(" ")[1]
+  const [hourStr, minuteStr] = time.split(":");
+
+  let hours = parseInt(hourStr, 10);
+  const minutes = parseInt(minuteStr, 10);
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+
+  const formattedHours = hours.toString();
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+
+  return `${formattedHours}:${formattedMinutes} ${ampm}`;
+}
+
 export function getValueFromCurrency(value: string) {
   const [, amountStr] = value.split(" ")
   const amount = parseFloat(amountStr.replace(/,/g, "")) || 0

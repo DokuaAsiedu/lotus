@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Jura, Inter, Montserrat, Golos_Text } from 'next/font/google'
-import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate, getTime, getValueFromCurrency } from "@/lib/helpers"
+import { formatDateString, formatMonthFirstDateString, formatPhoneNumber, getFormattedDate, getTimeFromFormattedDateString, getValueFromCurrency } from "@/lib/helpers"
 import { EventResult, RetailerSummary, SalesResponse, TicketResponse } from "@/types"
 import { Placeholder, Spinner } from "./general"
 import profileAvatar from "@public/avatar-sheena.png"
@@ -131,7 +131,7 @@ export function Tickets() {
               </div>
             </td>
             <td className="py-4 ps-4 text-nowrap">{elem.stakeAmount || "N/A"}</td>
-            <td className="py-4 px-4 text-nowrap">{elem.createdAt ? getTime(elem.createdAt) : "N/A"}</td>
+            <td className="py-4 px-4 text-nowrap">{elem.createdAt ? getTimeFromFormattedDateString(elem.createdAt) : "N/A"}</td>
           </tr>
         ))}
         
@@ -218,7 +218,7 @@ export function Tickets() {
                     </div>
                   </td>
                   <td className="py-4">{item.Stakes[0].stakeAmount || "N/A"}</td>
-                  <td className="py-4">{item.Stakes[0].createdAt ? getTime(item.Stakes[0].createdAt) : "N/A"}</td>
+                  <td className="py-4">{item.Stakes[0].createdAt ? getTimeFromFormattedDateString(item.Stakes[0].createdAt) : "N/A"}</td>
                   <td className="py-4 pe-6">
                     <div className="grid place-items-center">
                       <Image src={item.Stakes[0].retailClient.profileImage || profileAvatar} alt="Retailer profile picture" height={30} width={30} className="h-full aspect-square" />
