@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
 
     const body = JSON.stringify({ email, password })
 
+    console.log({BASE_URL});
+
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers,
